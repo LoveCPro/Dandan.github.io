@@ -5,7 +5,7 @@ permalink: /about/
 main_nav: true
 ---
 
-![alt text]({{ site.baseurl }}/assets/profile-placeholder.gif "Profile Picture"){:.profile}
+![alt text]({{ site.baseurl }}/assets/guozhi.jpg "Profile Picture"){:.profile}
 
 嗨，亲爱的访客们！我是一名程序媛小姐姐，一个带着 27 岁青春的技术爱好者，身怀一颗探索未知代码宇宙的心！一边与代码对话，一边怀揣着热情探索这个世界，这就是我在这个神奇网络时代的闯荡之旅。
 
