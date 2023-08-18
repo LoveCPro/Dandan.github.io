@@ -14,7 +14,7 @@ subtitle: "代码界的女王，Bug 的克星"
 email: lyldylidanyang@163.com
 name: Dandan
 description: >
-  代码界的女王，Bug 的克星.
+  踏在代码的征程，与 Bug 共舞.
 # Base URL of site (i.e. /blog). It should always start with a slash,
 # and never end with a slash. Set it to a blank value if hosting at the
 # root of your server.
@@ -116,10 +116,10 @@ social:
 # These are for automatically generating sharing metadata for FB and Twitter
 # OS Protocol is for sharing the source of your site, if you're interested. For more, see osprotocol.com
 protocols:
-    fb_image: "/assets/logo.png"
+    fb_image: "/assets/guozhi.jpg"
     fb_image_width: 612
     fb_image_height: 605
-    fb_image_type: "image/png"
+    fb_image_type: "image/jpg"
 
     twitter_image: "/assets/logo.png"
 
