@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Dandan&apos;s blog</title>
+    <description>踏在代码的征程，与 Bug 共舞.
+</description>
+    <link>http://0.0.0.0:5555/</link>
+    <atom:link href="http://0.0.0.0:5555/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Fri, 25 Aug 2023 13:57:54 +0800</pubDate>
+    <lastBuildDate>Fri, 25 Aug 2023 13:57:54 +0800</lastBuildDate>
+    <generator>Jekyll v4.3.2</generator>
+    
+      <item>
+        <title>dbus shell cmd</title>
+        <description>&lt;h1 id=&quot;获取所有接口&quot;&gt;获取所有接口&lt;/h1&gt; &lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dbus-send --system --print-reply --dest=com.ctc.igd1 /com/gwtt/igd1/config/IpPortFilter org.freedesktop.DBus.Introspectable.Introspect&lt;/code&gt;&lt;/p&gt; &lt;h1 id=&quot;查询所有实体获取所有配置&quot;&gt;查询所有实体获取所有配置&lt;/h1&gt; &lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dbus-send --system --type=method_call --print-reply --dest=com.ctc.igd1 /com/gwtt/igd1/config/IpPortFilter com.ctc.igd1.ObjectManager.GetManagedObjects&lt;/code&gt;&lt;/p&gt; &lt;h1 id=&quot;添加一个接口实例&quot;&gt;添加一个接口实例&lt;/h1&gt; &lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dbus-send --system --type=method_call --print-reply --dest=com.ctc.igd1...</description>
+        <pubDate>Tue, 13 Dec 2022 03:25:52 +0800</pubDate>
+        <link>http://0.0.0.0:5555/linux/2022/12/13/dbus-cmd.html</link>
+        <guid isPermaLink="true">http://0.0.0.0:5555/linux/2022/12/13/dbus-cmd.html</guid>
+        
+        
+        <category>Linux</category>
+        
+      </item>
+    
+      <item>
+        <title>select poll epoll区别整理</title>
+        <description>&lt;h1 id=&quot;select-poll-epoll-区别&quot;&gt;select poll epoll 区别&lt;/h1&gt; &lt;p&gt;不管是面试还是平时开发工作都会遇到select poll epoll之间区别的问题，今天大概给总结一下：&lt;/p&gt; &lt;table&gt; &lt;thead&gt; &lt;tr&gt; &lt;th&gt;特性&lt;/th&gt; &lt;th&gt;select&lt;/th&gt; &lt;th&gt;poll&lt;/th&gt; &lt;th&gt;epoll&lt;/th&gt; &lt;th&gt; &lt;/th&gt; &lt;th&gt; &lt;/th&gt; &lt;/tr&gt; &lt;/thead&gt; &lt;tbody&gt; &lt;tr&gt; &lt;td&gt;底层数据结构&lt;/td&gt; &lt;td&gt;数组存储文件描述符&lt;/td&gt; &lt;td&gt;链表存储文件描述符&lt;/td&gt; &lt;td&gt;红黑树存储文件描述符方式 、双链表存储就绪的文件描述符&lt;/td&gt; &lt;td&gt; &lt;/td&gt; &lt;td&gt; &lt;/td&gt; &lt;/tr&gt; &lt;tr&gt;...</description>
+        <pubDate>Tue, 14 Dec 2021 03:25:52 +0800</pubDate>
+        <link>http://0.0.0.0:5555/c%E7%A8%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/2021/12/14/select-poll-epoll.html</link>
+        <guid isPermaLink="true">http://0.0.0.0:5555/c%E7%A8%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/2021/12/14/select-poll-epoll.html</guid>
+        
+        
+        <category>C程序技术</category>
+        
+      </item>
+    
+      <item>
+        <title>C代码自我编程规范</title>
+        <description>&lt;h1 id=&quot;前言&quot;&gt;前言&lt;/h1&gt; &lt;p&gt;发现C程序没有一个标准的规范，就像if else后的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;{&lt;/code&gt;如果跟在if当前行或者单独起行都可，但是如果一个文件中有的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;{&lt;/code&gt;在单独行，有的在上边那一行，这样就看着很乱，或者一个人写的代码有的在同一行有的在下边，还是不一致，虽然无大碍，但还是别扭， 没办法， 哈哈， 有点代码洁癖，看不得不一致的东西。所以给自我做一个约束。&lt;/p&gt; &lt;h1 id=&quot;命名&quot;&gt;命名&lt;/h1&gt; &lt;h2 id=&quot;变量的命名&quot;&gt;变量的命名&lt;/h2&gt; &lt;p&gt;对所有的宏、全局变量都要有详细的注释 ：功能、取值范围、以及其他的注意事项，注释切记与上边的代码行隔开 i、j、k对于局部变量是允许的&lt;/p&gt; &lt;ul&gt; &lt;li&gt;不建议大小写混写&lt;/li&gt; &lt;li&gt;建议驼峰命名法：驼峰命名法就是当变量名或函数名是由一个或多个单字连结在一起,而构成的唯一识别字时,第一个单字以小写字母开始,第二个单字的首字母大写;或每一个单字的首字母都采用大写字母,例如:myFirstName、myLastName,这样的变量名看上去就像骆驼峰一样此起彼伏,故而得名。&lt;/li&gt; &lt;li&gt;当标识符是一个单词时，首字母小写&lt;/li&gt; &lt;li&gt;不要使用拼音&lt;/li&gt; &lt;li&gt;全局变量应该前加g_ ,静态变量前应该加 s_&lt;/li&gt; &lt;li&gt;指针的 * 应该紧挨着变量&lt;/li&gt; &lt;li&gt;枚举应该用大写&lt;/li&gt;...</description>
+        <pubDate>Tue, 14 Dec 2021 03:25:52 +0800</pubDate>
+        <link>http://0.0.0.0:5555/c%E7%A8%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/2021/12/14/C-code-guifan.html</link>
+        <guid isPermaLink="true">http://0.0.0.0:5555/c%E7%A8%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/2021/12/14/C-code-guifan.html</guid>
+        
+        
+        <category>C程序技术</category>
+        
+      </item>
+    
+      <item>
+        <title>NETCONF浅解</title>
+        <description>&lt;h2 id=&quot;netconf-浅解&quot;&gt;netconf 浅解&lt;/h2&gt; &lt;p&gt;由于作者使用netconf中都是用的callhome方式，所以本文默认都是 callhome连接方式，以下不再赘述。&lt;/p&gt; &lt;h3 id=&quot;netconf-server--tcp--xml&quot;&gt;netconf server tcp xml&lt;/h3&gt; &lt;div class=&quot;language-c highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;netconf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;xmlns&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;urn:ietf:params:xml:ns:yang:ietf-netconf-server&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;listen&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span...</description>
+        <pubDate>Thu, 01 Oct 2020 05:25:52 +0800</pubDate>
+        <link>http://0.0.0.0:5555/openwrt/2020/10/01/netconf-get.html</link>
+        <guid isPermaLink="true">http://0.0.0.0:5555/openwrt/2020/10/01/netconf-get.html</guid>
+        
+        
+        <category>openwrt</category>
+        
+      </item>
+    
+      <item>
+        <title>sysrepo源码解析</title>
+        <description>&lt;h1 id=&quot;前言&quot;&gt;前言&lt;/h1&gt; &lt;p&gt;Sysrepo 是一个用于网络设备的轻量级、模块化的配置和状态数据存储库。它以高效的方式存储、管理和检索设备的配置数据，同时支持实时监控设备的运行状态。&lt;/p&gt; &lt;h2 id=&quot;主要特性&quot;&gt;主要特性&lt;/h2&gt; &lt;ul&gt; &lt;li&gt; &lt;p&gt;&lt;strong&gt;模块化架构&lt;/strong&gt;：Sysrepo 的设计理念是模块化的，每个模块负责特定设备功能的配置和状态管理。这使得系统的可维护性和可扩展性得以提高。&lt;/p&gt; &lt;/li&gt; &lt;li&gt; &lt;p&gt;&lt;strong&gt;YANG 数据模型&lt;/strong&gt;：Sysrepo 使用 YANG 数据建模语言来描述设备的配置和状态。YANG 提供了一种标准化的方式来定义设备的数据模型，使得不同厂家的设备都可以基于共同的规范进行管理。&lt;/p&gt; &lt;/li&gt; &lt;li&gt; &lt;p&gt;&lt;strong&gt;快速读写操作&lt;/strong&gt;：Sysrepo 以高性能处理读写操作，确保了实时配置更改和状态监测的效率。&lt;/p&gt; &lt;/li&gt; &lt;li&gt; &lt;p&gt;&lt;strong&gt;事务支持&lt;/strong&gt;：Sysrepo 支持事务，保证了在配置更改过程中的一致性和可回滚性。&lt;/p&gt; &lt;/li&gt; &lt;li&gt; &lt;p&gt;&lt;strong&gt;通用 API&lt;/strong&gt;：Sysrepo...</description>
+        <pubDate>Sun, 27 Sep 2020 05:25:52 +0800</pubDate>
+        <link>http://0.0.0.0:5555/openwrt/2020/09/27/sysrepo-src.html</link>
+        <guid isPermaLink="true">http://0.0.0.0:5555/openwrt/2020/09/27/sysrepo-src.html</guid>
+        
+        
+        <category>openwrt</category>
+        
+      </item>
+    
+      <item>
+        <title>openwrt编译步骤</title>
+        <description>&lt;h1 id=&quot;前言&quot;&gt;前言&lt;/h1&gt; &lt;p&gt;年初入职了新的公司， 是搞通信的， 开发需要基于openwrt系统开发， 初期编译以及使用openwrt系统遇到了各种坑，整理出来，以防入坑。&lt;/p&gt; &lt;h1 id=&quot;编译&quot;&gt;编译&lt;/h1&gt; &lt;ul&gt; &lt;li&gt;ubuntu：18.04&lt;/li&gt; &lt;li&gt;openwrt：19.07&lt;/li&gt; &lt;/ul&gt; &lt;h2 id=&quot;安装依赖项&quot;&gt;安装依赖项&lt;/h2&gt; &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; bison flex unzip gcc g++...</description>
+        <pubDate>Wed, 03 Jun 2020 05:25:52 +0800</pubDate>
+        <link>http://0.0.0.0:5555/openwrt/2020/06/03/openwrt-build.html</link>
+        <guid isPermaLink="true">http://0.0.0.0:5555/openwrt/2020/06/03/openwrt-build.html</guid>
+        
+        
+        <category>openwrt</category>
+        
+      </item>
+    
+      <item>
+        <title>jekyll环境搭建</title>
+        <description>&lt;h1 id=&quot;前言&quot;&gt;前言&lt;/h1&gt; &lt;p&gt;作为一名程序媛， 想搞个地方放自己整理的文件， 用过 csdn，或者本地的有道云笔记， 或者传到 github上， 但是感觉都不太高级。后来了解到可以通过github搭建的自己的博客网站， 甚是高级，值得搞一搞。&lt;/p&gt; &lt;h1 id=&quot;一波三折&quot;&gt;一波三折&lt;/h1&gt; &lt;p&gt;我是一名基于linux平台得开发者，当然 使用linux系统要比windows要更舒服一些。所以一开始我就在linux上开始折腾，尝试了ubuntu18.0， 换了两个虚拟机， 都是各种问题， 某些gem包不能下载，jekyll一直下载不成功， 要么就是 下载成功了，&lt;em&gt;jekyll -v&lt;/em&gt;也能显示版本号， 但是 &lt;em&gt;jekyll serve&lt;/em&gt;使用时各种报错， 无奈以及无语。后来索性换了ubuntu20.04， 心想， 我都升级系统了， 总不会给我报错了吧，毕竟之前，18.04 默认安装ruby版本太低， 需要升级到20.04默认安装的ruby版本。但是， 天不随我愿，...</description>
+        <pubDate>Mon, 16 Dec 2019 05:25:52 +0800</pubDate>
+        <link>http://0.0.0.0:5555/%E7%94%9F%E6%B4%BB/2019/12/16/build-jekyll.html</link>
+        <guid isPermaLink="true">http://0.0.0.0:5555/%E7%94%9F%E6%B4%BB/2019/12/16/build-jekyll.html</guid>
+        
+        
+        <category>生活</category>
+        
+      </item>
+    
+      <item>
+        <title>子进程继承了父进程的什么</title>
+        <description>&lt;h1 id=&quot;前言&quot;&gt;前言&lt;/h1&gt; &lt;p&gt;代码从实习算起，目前也是写了一年多了，虽然父子进程之间的关系， 在编程中时不时会遇到，但是有时候整理起来，还是说不上来，今天就做个整理记录一下吧。&lt;/p&gt; &lt;h1 id=&quot;子进程继承父进程部分&quot;&gt;子进程继承父进程部分&lt;/h1&gt; &lt;p&gt;&lt;strong&gt;子进程继承父进程的部分&lt;/strong&gt;&lt;br /&gt; &lt;strong&gt;用户号UIDs和用户组号GIDs&lt;/strong&gt;&lt;br /&gt; &lt;strong&gt;环境Environment&lt;/strong&gt;&lt;br /&gt; &lt;strong&gt;堆栈&lt;/strong&gt;&lt;br /&gt; &lt;strong&gt;共享内存&lt;/strong&gt;&lt;br /&gt; &lt;strong&gt;打开文件的描述符&lt;/strong&gt;&lt;br /&gt; &lt;strong&gt;执行时关闭(Close-on-exec)标志&lt;/strong&gt;&lt;br /&gt; &lt;strong&gt;信号(Signal)控制设定&lt;/strong&gt;&lt;br /&gt; &lt;strong&gt;进程组号&lt;/strong&gt;&lt;br /&gt; &lt;strong&gt;当前工作目录&lt;/strong&gt;&lt;br /&gt; &lt;strong&gt;根目录&lt;/strong&gt;&lt;br /&gt; &lt;strong&gt;文件方式创建屏蔽字&lt;/strong&gt;&lt;br /&gt;...</description>
+        <pubDate>Sun, 09 Jun 2019 03:25:52 +0800</pubDate>
+        <link>http://0.0.0.0:5555/c%E7%A8%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/2019/06/09/father-son-process.html</link>
+        <guid isPermaLink="true">http://0.0.0.0:5555/c%E7%A8%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/2019/06/09/father-son-process.html</guid>
+        
+        
+        <category>C程序技术</category>
+        
+      </item>
+    
+      <item>
+        <title>ubuntu中samba搭建</title>
+        <description>&lt;h1 id=&quot;前言&quot;&gt;前言&lt;/h1&gt; &lt;p&gt;作为一个 linux环境开发者， 大家肯定遇到过这种情况， 代码在linux下，如果在虚拟机下使用 vscode或者SourceInsight编辑代码， 会非常的不方便， 所以想在windows系统下看、编辑代码， 那么就需要samba这种工具了。&lt;/p&gt; &lt;blockquote&gt; &lt;p&gt;Samba是SMB协议的一种实现方法，主要用来实现Linux系统的文件和打印服务。Linux用户通过配置Samba服务器可以实现与windows用户的资源共享。进程smbd和nmbd是Samba的核心，在全部时间运行。&lt;/p&gt; &lt;/blockquote&gt; &lt;p&gt;当然， linux系统中使用 vim编辑器也可以正常使用， 通过合理的配置，再编辑器中可以看到代码结构、代码块的跳转、高亮等等的功能， 但是中国人大多数的习惯还是 在windows下看代码， 而且windows下一些编辑器的强大功能是vim无法达到的。&lt;/p&gt; &lt;h1 id=&quot;samba安装&quot;&gt;samba安装&lt;/h1&gt; &lt;ul&gt; &lt;li&gt;本人使用运行环境：ubuntu 18.04&lt;/li&gt; &lt;li&gt;安装samba服务器 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre...</description>
+        <pubDate>Sat, 16 Mar 2019 05:25:52 +0800</pubDate>
+        <link>http://0.0.0.0:5555/linux/2019/03/16/linux-samba.html</link>
+        <guid isPermaLink="true">http://0.0.0.0:5555/linux/2019/03/16/linux-samba.html</guid>
+        
+        
+        <category>Linux</category>
+        
+      </item>
+    
+  </channel>
+</rss>

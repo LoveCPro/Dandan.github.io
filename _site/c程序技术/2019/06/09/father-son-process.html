@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>子进程继承了父进程的什么</title>
+  <meta name="description" content="前言代码从实习算起，目前也是写了一年多了，虽然父子进程之间的关系， 在编程中时不时会遇到，但是有时候整理起来，还是说不上来，今天就做个整理记录一下吧。子进程继承父进程部分子进程继承父进程的部分用户号UIDs和用户组号GIDs环境Environment堆栈共享内存打开文件的描述符执行时关闭(Close-on-exe...">
+  
+  <meta name="author" content="Dandan">
+  <meta name="copyright" content="&copy; Dandan 2023">
+  
+
+  <!-- External libraries -->
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/monokai-sublime.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
+
+  <!-- Favicon and other icons (made with http://www.favicon-generator.org/) -->
+  <link rel="shortcut icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="57x57" href="/assets/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/assets/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/assets/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/assets/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="manifest" href="/assets/icons/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/assets/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <!-- Facebook OGP cards -->
+  <meta property="og:description" content="前言代码从实习算起，目前也是写了一年多了，虽然父子进程之间的关系， 在编程中时不时会遇到，但是有时候整理起来，还是说不上来，今天就做个整理记录一下吧。子进程继承父进程部分子进程继承父进程的部分用户号UIDs和用户组号GIDs环境Environment堆栈共享内存打开文件的描述符执行时关闭(Close-on-exe..." />
+  <meta property="og:url" content="http://0.0.0.0:5555/c%E7%A8%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/2019/06/09/father-son-process.html">
+  <meta property="og:site_name" content="Dandan's blog" />
+  <meta property="og:title" content="子进程继承了父进程的什么" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="http://0.0.0.0:5555/assets/guozhi.jpg" />
+  <meta property="og:image:type" content="image/jpg" />
+  <meta property="og:image:width" content="612" />
+  <meta property="og:image:height" content="605" />
+  
+
+  
+  <!-- Twitter: card tags -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="子进程继承了父进程的什么">
+  <meta name="twitter:description" content="前言代码从实习算起，目前也是写了一年多了，虽然父子进程之间的关系， 在编程中时不时会遇到，但是有时候整理起来，还是说不上来，今天就做个整理记录一下吧。子进程继承父进程部分子进程继承父进程的部分用户号UIDs和用户组号GIDs环境Environment堆栈共享内存打开文件的描述符执行时关闭(Close-on-exe...">
+  <meta name="twitter:image" content="http://0.0.0.0:5555/assets/logo.png">
+  <meta name="twitter:url" content="http://0.0.0.0:5555/c%E7%A8%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/2019/06/09/father-son-process.html">
+  
+
+  
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://0.0.0.0:5555/c%E7%A8%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/2019/06/09/father-son-process.html">
+	<link rel="alternate" type="application/rss+xml" title="Dandan's blog" href="http://0.0.0.0:5555/feed.xml" />
+	
+	<!-- Tooltips -->
+	<script type="text/javascript">
+		window.tooltips = []
+	</script>
+</head>
+
+
+  <body>
+
+    <header class="navigation" role="banner">
+  <div class="navigation-wrapper">
+    <a href="/" class="logo">
+      
+      <img src="/assets/guozhi.jpg" alt="Dandan's blog">
+      
+    </a>
+    <a href="javascript:void(0)" class="navigation-menu-button" id="js-mobile-menu">
+      <i class="fa fa-bars"></i>
+    </a>
+    <nav role="navigation">
+      <ul id="js-navigation-menu" class="navigation-menu show">
+				
+	
+	<li class="nav-link"><a href="/about/">About</a>
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+	<li class="nav-link"><a href="/typography/">Typography</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+    <div class="page-content">
+        <div class="post">
+
+<div class="post-header-container " >
+  <div class="scrim ">
+    <header class="post-header">
+      <h1 class="title">子进程继承了父进程的什么</h1>
+      <p class="info">by <strong>Dandan</strong></p>
+    </header>
+  </div>
+</div>
+
+<div class="wrapper">
+
+ <span class="page-divider">
+  <span class="one"></span>
+  <span class="two"></span>
+</span>
+ 
+
+<section class="post-meta">
+  <div class="post-date">June 9, 2019</div>
+  <div class="post-categories">
+  in 
+    
+    <a href="/category/C程序技术">C程序技术</a>
+    
+  
+  </div>
+</section>
+
+<article class="post-content">
+  <h1 id="前言">前言</h1>
+<p>代码从实习算起，目前也是写了一年多了，虽然父子进程之间的关系， 在编程中时不时会遇到，但是有时候整理起来，还是说不上来，今天就做个整理记录一下吧。</p>
+<h1 id="子进程继承父进程部分">子进程继承父进程部分</h1>
+<p><strong>子进程继承父进程的部分</strong><br />
+<strong>用户号UIDs和用户组号GIDs</strong><br />
+<strong>环境Environment</strong><br />
+<strong>堆栈</strong><br />
+<strong>共享内存</strong><br />
+<strong>打开文件的描述符</strong><br />
+<strong>执行时关闭(Close-on-exec)标志</strong><br />
+<strong>信号(Signal)控制设定</strong><br />
+<strong>进程组号</strong><br />
+<strong>当前工作目录</strong><br />
+<strong>根目录</strong><br />
+<strong>文件方式创建屏蔽字</strong><br />
+<strong>资源限制</strong><br />
+<strong>控制终端</strong></p>
+<h1 id="子进程独有">子进程独有</h1>
+<p><strong>进程号PID</strong><br />
+<strong>不同的父进程号</strong><br />
+<strong>自己的文件描述符和目录流的拷贝</strong><br />
+<strong>子进程不继承父进程的进程正文（text），数据和其他锁定内存（memory locks）</strong><br />
+<strong>不继承异步输入和输出</strong></p>
+
+<h1 id="示例以及部分说明">示例以及部分说明</h1>
+<p>需要注意的是，子进程在继承这些属性和资源时，并不会直接共享父进程中的这些内容，而是复制一份副本。这意味着子进程和父进程在此后可以独立地修改它们各自的副本，而不会相互影响。</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+    <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"hello wolrd</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+
+    <span class="n">pid_t</span> <span class="n">pid</span> <span class="o">=</span> <span class="n">fork</span><span class="p">();</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">pid</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">){</span>
+        <span class="n">perror</span><span class="p">(</span><span class="s">"fork error"</span><span class="p">);</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span><span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">pid</span> <span class="o">==</span> <span class="mi">0</span><span class="p">){</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"child &amp;x = %p, x=%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">);</span>
+    <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"parent &amp;x = %p, x=%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+<p>执行结果</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">hello</span> <span class="n">wolrd</span>
+<span class="n">child</span> <span class="o">&amp;</span><span class="n">x</span> <span class="o">=</span> <span class="mh">0x7ffc5e25a550</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">10</span>
+<span class="n">parent</span> <span class="o">&amp;</span><span class="n">x</span> <span class="o">=</span> <span class="mh">0x7ffc5e25a550</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span>
+</code></pre></div></div>
+<p>从输出结果可以看出，子进程继承了父进程的堆栈，并且可以访问和修改堆栈中的变量。但是子进程和父进程在修改变量时是互不干扰的，它们分别操作自己的堆栈副本。当然包含，父进程中的变量用malloc申请的空间，子进程修改该值，并不影响父进程中该变量的值。所以，使用时，需要在父子进程都释放一遍该空间。</p>
+
+
+</article>
+
+
+
+
+
+<section class="rss">
+  <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+</section>
+
+<section class="share">
+  <span>Share: </span>
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+      <a href="//www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2F0.0.0.0%3A5555%2Fc%25E7%25A8%258B%25E5%25BA%258F%25E6%258A%2580%25E6%259C%25AF%2F2019%2F06%2F09%2Ffather-son-process.html"
+        onclick="window.open(this.href, 'linkedin-share', 'width=550,height=255');return false;">
+        <i class="fa fa-linkedin-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      <a href="//plus.google.com/share?title=%E5%AD%90%E8%BF%9B%E7%A8%8B%E7%BB%A7%E6%89%BF%E4%BA%86%E7%88%B6%E8%BF%9B%E7%A8%8B%E7%9A%84%E4%BB%80%E4%B9%88&url=http%3A%2F%2F0.0.0.0%3A5555%2Fc%25E7%25A8%258B%25E5%25BA%258F%25E6%258A%2580%25E6%259C%25AF%2F2019%2F06%2F09%2Ffather-son-process.html"
+        onclick="window.open(this.href, 'google-plus-share', 'width=550,height=255');return false;">
+        <i class="fa fa-google-plus-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+</section>
+
+
+
+
+</div>
+</div>
+
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h3 class="footer-heading">Dandan's blog</h3>
+
+    <div class="site-navigation">
+
+      <p><strong>Site Map</strong></p>
+      <ul class="pages">
+				
+	
+	<li class="nav-link"><a href="/about/">About</a>
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+	<li class="nav-link"><a href="/typography/">Typography</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </div>
+
+    <div class="site-contact">
+
+      <p><strong>Contact</strong></p>
+      <ul class="social-media-list">
+        <li>
+          <a href="mailto:lyldylidanyang@163.com">
+            <i class="fa fa-envelope-o"></i>
+            <span class="username">lyldylidanyang@163.com</span>
+          </a>
+        </li>
+
+        
+          
+          <li>
+            <a href="https://blog.csdn.net/weixin_41855428?spm=1011.2415.3001.5343" title="Follow me on Twitter">
+              <i class="fa fa-twitter"></i>
+              <span class="username">TheBenCentra</span>
+            </a>
+          </li>
+          
+        
+          
+          <li>
+            <a href="https://github.com/LoveCPro" title="Fork me on GitHub">
+              <i class="fa fa-github"></i>
+              <span class="username">Dandan</span>
+            </a>
+          </li>
+          
+        
+          
+          <li>
+            <a href="https://www.linkedin.com/pub/ben-centra/47/769/60a" title="Connect with me on LinkedIn">
+              <i class="fa fa-linkedin"></i>
+              <span class="username">Ben Centra</span>
+            </a>
+          </li>
+          
+        
+          
+        
+          
+        
+
+      </ul>
+    </div>
+
+    <div class="site-signature">
+      <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+      <p class="text">踏在代码的征程，与 Bug 共舞.
+</p>
+    </div>
+
+  </div>
+
+</footer>
+
+<!-- Scripts -->
+<script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.1/js/lightbox.min.js"></script>
+<script src="//unpkg.com/popper.js@1"></script>
+<script src="//unpkg.com/tippy.js@5"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  // Default syntax highlighting
+  hljs.initHighlightingOnLoad();
+
+  // Header
+  var menuToggle = $('#js-mobile-menu').unbind();
+  $('#js-navigation-menu').removeClass("show");
+  menuToggle.on('click', function(e) {
+    e.preventDefault();
+    $('#js-navigation-menu').slideToggle(function(){
+      if($('#js-navigation-menu').is(':hidden')) {
+        $('#js-navigation-menu').removeAttr('style');
+      }
+    });
+  });
+
+	// Enable tooltips via Tippy.js
+	if (Array.isArray(window.tooltips)) {
+		window.tooltips.forEach(function(tooltip) {
+			var selector = tooltip[0];
+			var config = tooltip[1];
+			tippy(selector, config);
+		})
+	}
+});
+
+</script>
+
+
+
+
+
+
+  </body>
+
+</html>

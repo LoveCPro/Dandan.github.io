@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>select poll epoll区别整理</title>
+  <meta name="description" content="select poll epoll 区别不管是面试还是平时开发工作都会遇到select poll epoll之间区别的问题，今天大概给总结一下：">
+  
+  <meta name="author" content="Dandan">
+  <meta name="copyright" content="&copy; Dandan 2023">
+  
+
+  <!-- External libraries -->
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/monokai-sublime.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
+
+  <!-- Favicon and other icons (made with http://www.favicon-generator.org/) -->
+  <link rel="shortcut icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="57x57" href="/assets/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/assets/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/assets/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/assets/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="manifest" href="/assets/icons/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/assets/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <!-- Facebook OGP cards -->
+  <meta property="og:description" content="select poll epoll 区别不管是面试还是平时开发工作都会遇到select poll epoll之间区别的问题，今天大概给总结一下：" />
+  <meta property="og:url" content="http://0.0.0.0:5555/c%E7%A8%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/2021/12/14/select-poll-epoll.html">
+  <meta property="og:site_name" content="Dandan's blog" />
+  <meta property="og:title" content="select poll epoll区别整理" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="http://0.0.0.0:5555/assets/guozhi.jpg" />
+  <meta property="og:image:type" content="image/jpg" />
+  <meta property="og:image:width" content="612" />
+  <meta property="og:image:height" content="605" />
+  
+
+  
+  <!-- Twitter: card tags -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="select poll epoll区别整理">
+  <meta name="twitter:description" content="select poll epoll 区别不管是面试还是平时开发工作都会遇到select poll epoll之间区别的问题，今天大概给总结一下：">
+  <meta name="twitter:image" content="http://0.0.0.0:5555/assets/logo.png">
+  <meta name="twitter:url" content="http://0.0.0.0:5555/c%E7%A8%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/2021/12/14/select-poll-epoll.html">
+  
+
+  
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://0.0.0.0:5555/c%E7%A8%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/2021/12/14/select-poll-epoll.html">
+	<link rel="alternate" type="application/rss+xml" title="Dandan's blog" href="http://0.0.0.0:5555/feed.xml" />
+	
+	<!-- Tooltips -->
+	<script type="text/javascript">
+		window.tooltips = []
+	</script>
+</head>
+
+
+  <body>
+
+    <header class="navigation" role="banner">
+  <div class="navigation-wrapper">
+    <a href="/" class="logo">
+      
+      <img src="/assets/guozhi.jpg" alt="Dandan's blog">
+      
+    </a>
+    <a href="javascript:void(0)" class="navigation-menu-button" id="js-mobile-menu">
+      <i class="fa fa-bars"></i>
+    </a>
+    <nav role="navigation">
+      <ul id="js-navigation-menu" class="navigation-menu show">
+				
+	
+	<li class="nav-link"><a href="/about/">About</a>
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+	<li class="nav-link"><a href="/typography/">Typography</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+    <div class="page-content">
+        <div class="post">
+
+<div class="post-header-container " >
+  <div class="scrim ">
+    <header class="post-header">
+      <h1 class="title">select poll epoll区别整理</h1>
+      <p class="info">by <strong>Dandan</strong></p>
+    </header>
+  </div>
+</div>
+
+<div class="wrapper">
+
+ <span class="page-divider">
+  <span class="one"></span>
+  <span class="two"></span>
+</span>
+ 
+
+<section class="post-meta">
+  <div class="post-date">December 14, 2021</div>
+  <div class="post-categories">
+  in 
+    
+    <a href="/category/C程序技术">C程序技术</a>
+    
+  
+  </div>
+</section>
+
+<article class="post-content">
+  <h1 id="select-poll-epoll-区别">select poll epoll 区别</h1>
+<p>不管是面试还是平时开发工作都会遇到select poll epoll之间区别的问题，今天大概给总结一下：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>特性</th>
+      <th>select</th>
+      <th>poll</th>
+      <th>epoll</th>
+      <th> </th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>底层数据结构</td>
+      <td>数组存储文件描述符</td>
+      <td>链表存储文件描述符</td>
+      <td>红黑树存储文件描述符方式 、双链表存储就绪的文件描述符</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>如何从fd数据中获取就绪的fd</td>
+      <td>遍历fd_set</td>
+      <td>遍历链表</td>
+      <td>回调</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>时间复杂度</td>
+      <td>获得就绪的文件描述符需要遍历fd数组 O(n)</td>
+      <td>获得就绪的文件描述符需要遍历fd链表O(n)</td>
+      <td>当有就绪事件时，系统注册的回调函数就会被调用，将就绪的fd放到链表中 O(1)</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <tbody>
+    <tr>
+      <td>fd数据拷贝</td>
+      <td>每次调用select， 需要将fd数据从用户空间拷贝到内核空间</td>
+      <td>每次调用poll需要将fd数据从用户空间拷贝到内核空间</td>
+      <td>使用内存映射mmap,不需要从用户空间频繁拷贝fd数据到内和空间，epoll_ctl时拷贝进内核，之后每次epoll_wait不需拷贝</td>
+    </tr>
+    <tr>
+      <td>内存使用</td>
+      <td>较高</td>
+      <td>较高</td>
+      <td>较低</td>
+    </tr>
+    <tr>
+      <td>最大连接数限制</td>
+      <td>有限制，一般为1024</td>
+      <td>无限制</td>
+      <td>无限制</td>
+    </tr>
+  </tbody>
+</table>
+
+<h1 id="应用场景">应用场景</h1>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>a. 连接数较少并且都很活跃,用select和poll效率更高
+b. 连接数较多并且都不很活跃,使用epoll效率更高
+</code></pre></div></div>
+
+<h1 id="select-缺点">select 缺点：</h1>
+<p>1.性能开销大：</p>
+<ol>
+  <li>调用 select 时会陷入内核，这时需要将参数中的 fd_set 从用户空间拷贝到内核空间</li>
+  <li>内核需要遍历传递进来的所有 fd_set 的每一位，不管它们是否就绪
+2.文件描述符个数太少</li>
+</ol>
+
+<h1 id="poll">poll</h1>
+<p>1.和select几乎没有区别，用户态数组方式传递文件描述符，到了 内核转变成链表存储， 无文件描述符限制， 从性能开销上 和select差别不大</p>
+
+<h1 id="epoll">epoll</h1>
+<p>1.避免了 开销大的问题
+1.使用红黑树存储文件描述符集合    —
+2使用队列存储就绪的文件描述符</p>
+
+<p>适用场景：
+1.连接数很多 且  是 不活跃的连接时，epoll 效率比其他的要高
+2.当连接数较少  且活跃， 使用 select 或者 poll</p>
+
+</article>
+
+
+
+
+
+<section class="rss">
+  <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+</section>
+
+<section class="share">
+  <span>Share: </span>
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+      <a href="//www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2F0.0.0.0%3A5555%2Fc%25E7%25A8%258B%25E5%25BA%258F%25E6%258A%2580%25E6%259C%25AF%2F2021%2F12%2F14%2Fselect-poll-epoll.html"
+        onclick="window.open(this.href, 'linkedin-share', 'width=550,height=255');return false;">
+        <i class="fa fa-linkedin-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      <a href="//plus.google.com/share?title=select+poll+epoll%E5%8C%BA%E5%88%AB%E6%95%B4%E7%90%86&url=http%3A%2F%2F0.0.0.0%3A5555%2Fc%25E7%25A8%258B%25E5%25BA%258F%25E6%258A%2580%25E6%259C%25AF%2F2021%2F12%2F14%2Fselect-poll-epoll.html"
+        onclick="window.open(this.href, 'google-plus-share', 'width=550,height=255');return false;">
+        <i class="fa fa-google-plus-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+</section>
+
+
+
+
+</div>
+</div>
+
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h3 class="footer-heading">Dandan's blog</h3>
+
+    <div class="site-navigation">
+
+      <p><strong>Site Map</strong></p>
+      <ul class="pages">
+				
+	
+	<li class="nav-link"><a href="/about/">About</a>
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+	<li class="nav-link"><a href="/typography/">Typography</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </div>
+
+    <div class="site-contact">
+
+      <p><strong>Contact</strong></p>
+      <ul class="social-media-list">
+        <li>
+          <a href="mailto:lyldylidanyang@163.com">
+            <i class="fa fa-envelope-o"></i>
+            <span class="username">lyldylidanyang@163.com</span>
+          </a>
+        </li>
+
+        
+          
+          <li>
+            <a href="https://blog.csdn.net/weixin_41855428?spm=1011.2415.3001.5343" title="Follow me on Twitter">
+              <i class="fa fa-twitter"></i>
+              <span class="username">TheBenCentra</span>
+            </a>
+          </li>
+          
+        
+          
+          <li>
+            <a href="https://github.com/LoveCPro" title="Fork me on GitHub">
+              <i class="fa fa-github"></i>
+              <span class="username">Dandan</span>
+            </a>
+          </li>
+          
+        
+          
+          <li>
+            <a href="https://www.linkedin.com/pub/ben-centra/47/769/60a" title="Connect with me on LinkedIn">
+              <i class="fa fa-linkedin"></i>
+              <span class="username">Ben Centra</span>
+            </a>
+          </li>
+          
+        
+          
+        
+          
+        
+
+      </ul>
+    </div>
+
+    <div class="site-signature">
+      <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+      <p class="text">踏在代码的征程，与 Bug 共舞.
+</p>
+    </div>
+
+  </div>
+
+</footer>
+
+<!-- Scripts -->
+<script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.1/js/lightbox.min.js"></script>
+<script src="//unpkg.com/popper.js@1"></script>
+<script src="//unpkg.com/tippy.js@5"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  // Default syntax highlighting
+  hljs.initHighlightingOnLoad();
+
+  // Header
+  var menuToggle = $('#js-mobile-menu').unbind();
+  $('#js-navigation-menu').removeClass("show");
+  menuToggle.on('click', function(e) {
+    e.preventDefault();
+    $('#js-navigation-menu').slideToggle(function(){
+      if($('#js-navigation-menu').is(':hidden')) {
+        $('#js-navigation-menu').removeAttr('style');
+      }
+    });
+  });
+
+	// Enable tooltips via Tippy.js
+	if (Array.isArray(window.tooltips)) {
+		window.tooltips.forEach(function(tooltip) {
+			var selector = tooltip[0];
+			var config = tooltip[1];
+			tippy(selector, config);
+		})
+	}
+});
+
+</script>
+
+
+
+
+
+
+  </body>
+
+</html>

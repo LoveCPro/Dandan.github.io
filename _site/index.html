@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Dandan's blog</title>
+  <meta name="description" content="踏在代码的征程，与 Bug 共舞.
+">
+  
+  <meta name="author" content="Dandan">
+  <meta name="copyright" content="&copy; Dandan 2023">
+  
+
+  <!-- External libraries -->
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/monokai-sublime.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
+
+  <!-- Favicon and other icons (made with http://www.favicon-generator.org/) -->
+  <link rel="shortcut icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="57x57" href="/assets/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/assets/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/assets/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/assets/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="manifest" href="/assets/icons/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/assets/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <!-- Facebook OGP cards -->
+  <meta property="og:description" content="踏在代码的征程，与 Bug 共舞.
+" />
+  <meta property="og:url" content="http://0.0.0.0:5555/index.html">
+  <meta property="og:site_name" content="Dandan's blog" />
+  <meta property="og:title" content="Dandan's blog" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="http://0.0.0.0:5555/assets/guozhi.jpg" />
+  <meta property="og:image:type" content="image/jpg" />
+  <meta property="og:image:width" content="612" />
+  <meta property="og:image:height" content="605" />
+  
+
+  
+  <!-- Twitter: card tags -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Dandan's blog">
+  <meta name="twitter:description" content="踏在代码的征程，与 Bug 共舞.
+">
+  <meta name="twitter:image" content="http://0.0.0.0:5555/assets/logo.png">
+  <meta name="twitter:url" content="http://0.0.0.0:5555/index.html">
+  
+
+  
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://0.0.0.0:5555/">
+	<link rel="alternate" type="application/rss+xml" title="Dandan's blog" href="http://0.0.0.0:5555/feed.xml" />
+	
+	<!-- Tooltips -->
+	<script type="text/javascript">
+		window.tooltips = []
+	</script>
+</head>
+
+
+  <body>
+
+    <header class="navigation" role="banner">
+  <div class="navigation-wrapper">
+    <a href="/" class="logo">
+      
+      <img src="/assets/guozhi.jpg" alt="Dandan's blog">
+      
+    </a>
+    <a href="javascript:void(0)" class="navigation-menu-button" id="js-mobile-menu">
+      <i class="fa fa-bars"></i>
+    </a>
+    <nav role="navigation">
+      <ul id="js-navigation-menu" class="navigation-menu show">
+				
+	
+	<li class="nav-link"><a href="/about/">About</a>
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+	<li class="nav-link"><a href="/typography/">Typography</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+    <div class="page-content">
+        <div class="home">
+
+<div class="site-header-container has-cover" style="background-image: url(/assets/kadingche.jpg);">
+  <div class="scrim has-cover">
+    <header class="site-header">
+      <h1 class="title">Dandan's blog</h1>
+      <p class="subtitle">代码界的女王，Bug 的克星</p>
+    </header>
+  </div>
+</div>
+
+<div class="wrapper">
+<ul class="post-list">
+  
+  <li>
+    <h2>
+      <a class="post-link" href="/linux/2022/12/13/dbus-cmd.html">dbus shell cmd</a>
+    </h2>
+    <section class="post-excerpt" itemprop="description">
+      <p>获取所有接口 dbus-send --system --print-reply --dest=com.ctc.igd1 /com/gwtt/igd1/config/IpPortFilter org.freedesktop.DBus.Introspectable.Introspect 查询所有实体获取所有配置 dbus-send --system --type=method_call --print-reply --dest=com.ctc.igd1 /com/gwtt/igd1/config/IpPortFilter com.ctc.igd1.ObjectManager.GetManagedObjects 添加一个接口实例 dbus-send --system --type=method_call --print-reply --dest=com.ctc.igd1 /com/gwtt/igd1/config/IpPortFilter com.ctc.igd1.ObjectManager.AddObject 设置属性 gdbus call --method com.ctc.igd1.Properties.Set com.gwtt.igd1.IpPortFilter DstIpEnd "&lt;\"192.168.1.6\"&gt;" --system --dest "com.ctc.igd1" --object-path /com/gwtt/igd1/config/IpPortFilter/1 删除一个 实体 dbus-send --system --type=method_call --print-reply --dest=com.ctc.igd1 /com/gwtt/igd1/config/IpPortFilter com.ctc.igd1.ObjectManager.DeleteObject objpath:'/com/gwtt/igd1/config/IpPortFilter/1' mib命令 mib get IP_PORT_FILTER_TBL...</p>
+    </section>
+    <section class="post-meta">
+      <div class="post-date">December 13, 2022</div>
+      <div class="post-categories">
+      in 
+        
+        <a href="/category/Linux">Linux</a>
+        
+      
+      </div>
+    </section>
+  </li>
+  
+  <hr>
+  
+  
+  <li>
+    <h2>
+      <a class="post-link" href="/c%E7%A8%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/2021/12/14/C-code-guifan.html">C代码自我编程规范</a>
+    </h2>
+    <section class="post-excerpt" itemprop="description">
+      <p>前言 发现C程序没有一个标准的规范，就像if else后的{如果跟在if当前行或者单独起行都可，但是如果一个文件中有的{在单独行，有的在上边那一行，这样就看着很乱，或者一个人写的代码有的在同一行有的在下边，还是不一致，虽然无大碍，但还是别扭， 没办法， 哈哈， 有点代码洁癖，看不得不一致的东西。所以给自我做一个约束。 命名 变量的命名 对所有的宏、全局变量都要有详细的注释 ：功能、取值范围、以及其他的注意事项，注释切记与上边的代码行隔开 i、j、k对于局部变量是允许的 不建议大小写混写 建议驼峰命名法：驼峰命名法就是当变量名或函数名是由一个或多个单字连结在一起,而构成的唯一识别字时,第一个单字以小写字母开始,第二个单字的首字母大写;或每一个单字的首字母都采用大写字母,例如:myFirstName、myLastName,这样的变量名看上去就像骆驼峰一样此起彼伏,故而得名。 当标识符是一个单词时，首字母小写 不要使用拼音 全局变量应该前加g_ ,静态变量前应该加 s_ 指针的 * 应该紧挨着变量 枚举应该用大写 常量名用大写 函数的命名 函数名应该以动词开头 因为函数是一组具有特 定功能的语句块。比如一个函数，它用于取得外部输入的数值，则可以命名为get_input_number。 宏 全大写 代码间行数的间隔 独立的代码块 和变量之间必须加空行 例如：如下不符合规范 if (!valid_ni(ni)) { ... // program code } repssn_ind = ssn_data[index].repssn_index; repssn_ni = ssn_data[index].ni; 应该书写如下： if (!valid_ni(ni))...</p>
+    </section>
+    <section class="post-meta">
+      <div class="post-date">December 14, 2021</div>
+      <div class="post-categories">
+      in 
+        
+        <a href="/category/C程序技术">C程序技术</a>
+        
+      
+      </div>
+    </section>
+  </li>
+  
+  <hr>
+  
+  
+  <li>
+    <h2>
+      <a class="post-link" href="/c%E7%A8%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/2021/12/14/select-poll-epoll.html">select poll epoll区别整理</a>
+    </h2>
+    <section class="post-excerpt" itemprop="description">
+      <p>select poll epoll 区别 不管是面试还是平时开发工作都会遇到select poll epoll之间区别的问题，今天大概给总结一下： 特性 select poll epoll     底层数据结构 数组存储文件描述符 链表存储文件描述符 红黑树存储文件描述符方式 、双链表存储就绪的文件描述符     如何从fd数据中获取就绪的fd 遍历fd_set 遍历链表 回调     时间复杂度 获得就绪的文件描述符需要遍历fd数组 O(n) 获得就绪的文件描述符需要遍历fd链表O(n) 当有就绪事件时，系统注册的回调函数就会被调用，将就绪的fd放到链表中 O(1)     fd数据拷贝 每次调用select， 需要将fd数据从用户空间拷贝到内核空间 每次调用poll需要将fd数据从用户空间拷贝到内核空间 使用内存映射mmap,不需要从用户空间频繁拷贝fd数据到内和空间，epoll_ctl时拷贝进内核，之后每次epoll_wait不需拷贝 内存使用 较高 较高 较低 最大连接数限制 有限制，一般为1024 无限制 无限制 应用场景 a. 连接数较少并且都很活跃,用select和poll效率更高...</p>
+    </section>
+    <section class="post-meta">
+      <div class="post-date">December 14, 2021</div>
+      <div class="post-categories">
+      in 
+        
+        <a href="/category/C程序技术">C程序技术</a>
+        
+      
+      </div>
+    </section>
+  </li>
+  
+  <hr>
+  
+  
+  <li>
+    <h2>
+      <a class="post-link" href="/openwrt/2020/10/01/netconf-get.html">NETCONF浅解</a>
+    </h2>
+    <section class="post-excerpt" itemprop="description">
+      <p>netconf 浅解 由于作者使用netconf中都是用的callhome方式，所以本文默认都是 callhome连接方式，以下不再赘述。 netconf server tcp xml &lt;netconf-server xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-server"&gt; &lt;listen&gt; &lt;endpoint&gt; &lt;name&gt;default-ssh&lt;/name&gt; &lt;ssh&gt; &lt;tcp-server-parameters&gt; &lt;local-address&gt;0.0.0.0&lt;/local-address&gt; &lt;keepalives&gt; &lt;idle-time&gt;1&lt;/idle-time&gt; &lt;max-probes&gt;10&lt;/max-probes&gt; &lt;probe-interval&gt;5&lt;/probe-interval&gt; &lt;/keepalives&gt; &lt;/tcp-server-parameters&gt; 相应代码 xml中的&lt;idle-time&gt; 对应的以下的 TCP_KEEPIDLE， &lt;max-probes&gt;对应TCP_KEEPCNT，&lt;probe-interval&gt; 对应的TCP_KEEPINTVL int nc_sock_enable_keepalive(int sock, struct nc_keepalives *ka) { int opt; opt = 1; if (setsockopt(sock, SOL_SOCKET, SO_KEEPALIVE, &amp;opt, sizeof opt) == -1) {...</p>
+    </section>
+    <section class="post-meta">
+      <div class="post-date">October 1, 2020</div>
+      <div class="post-categories">
+      in 
+        
+        <a href="/category/openwrt">Openwrt</a>
+        
+      
+      </div>
+    </section>
+  </li>
+  
+  <hr>
+  
+  
+  <li>
+    <h2>
+      <a class="post-link" href="/openwrt/2020/09/27/sysrepo-src.html">sysrepo源码解析</a>
+    </h2>
+    <section class="post-excerpt" itemprop="description">
+      <p>前言 Sysrepo 是一个用于网络设备的轻量级、模块化的配置和状态数据存储库。它以高效的方式存储、管理和检索设备的配置数据，同时支持实时监控设备的运行状态。 主要特性 模块化架构：Sysrepo 的设计理念是模块化的，每个模块负责特定设备功能的配置和状态管理。这使得系统的可维护性和可扩展性得以提高。 YANG 数据模型：Sysrepo 使用 YANG 数据建模语言来描述设备的配置和状态。YANG 提供了一种标准化的方式来定义设备的数据模型，使得不同厂家的设备都可以基于共同的规范进行管理。 快速读写操作：Sysrepo 以高性能处理读写操作，确保了实时配置更改和状态监测的效率。 事务支持：Sysrepo 支持事务，保证了在配置更改过程中的一致性和可回滚性。 通用 API：Sysrepo 提供了易于使用的 API，供开发人员构建自定义的网络管理应用程序。 与各种协议兼容：Sysrepo 支持 RESTCONF、NETCONF 等标准协议，使得网络管理可以基于通用的网络协议进行。 应用领域 网络设备管理：Sysrepo 可用于管理路由器、交换机等各种网络设备的配置和状态信息。 SDN 控制器：在软件定义网络中，Sysrepo 可以作为 SDN 控制器的基础，实现集中式的网络管理。 网络自动化：Sysrepo 可以与自动化工具集成，实现网络配置的自动化部署和维护。 一、sysrepo 源码分析 应用程序通过将对 sysrepo 的调用通过 sysrepo 提供的相应的 API 接口访问方法，称为 syrepo 的间接访问方法。该方法是应用程序通过创建 Deamon 进程，通过 IPC Shm 机制与...</p>
+    </section>
+    <section class="post-meta">
+      <div class="post-date">September 27, 2020</div>
+      <div class="post-categories">
+      in 
+        
+        <a href="/category/openwrt">Openwrt</a>
+        
+      
+      </div>
+    </section>
+  </li>
+  
+  
+</ul>
+
+<nav class="pagination" role="navigation">
+	<p>
+    
+		<span class="fa-stack fa-lg">
+      <i class="fa fa-square fa-stack-2x"></i>
+      <i class="fa fa-angle-double-left fa-stack-1x fa-inverse"></i>
+    </span>
+		
+		<span class="page-number">Page 1 of 2</span>
+		
+		<a class="newer-posts" href="/page/2/">
+      <span class="fa-stack fa-lg">
+        <i class="fa fa-square fa-stack-2x"></i>
+        <i class="fa fa-angle-double-right fa-stack-1x fa-inverse"></i>
+      </span>
+    </a>
+		
+	</p>
+</nav>
+
+</div>
+</div>
+
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h3 class="footer-heading">Dandan's blog</h3>
+
+    <div class="site-navigation">
+
+      <p><strong>Site Map</strong></p>
+      <ul class="pages">
+				
+	
+	<li class="nav-link"><a href="/about/">About</a>
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+	<li class="nav-link"><a href="/typography/">Typography</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </div>
+
+    <div class="site-contact">
+
+      <p><strong>Contact</strong></p>
+      <ul class="social-media-list">
+        <li>
+          <a href="mailto:lyldylidanyang@163.com">
+            <i class="fa fa-envelope-o"></i>
+            <span class="username">lyldylidanyang@163.com</span>
+          </a>
+        </li>
+
+        
+          
+          <li>
+            <a href="https://blog.csdn.net/weixin_41855428?spm=1011.2415.3001.5343" title="Follow me on Twitter">
+              <i class="fa fa-twitter"></i>
+              <span class="username">TheBenCentra</span>
+            </a>
+          </li>
+          
+        
+          
+          <li>
+            <a href="https://github.com/LoveCPro" title="Fork me on GitHub">
+              <i class="fa fa-github"></i>
+              <span class="username">Dandan</span>
+            </a>
+          </li>
+          
+        
+          
+          <li>
+            <a href="https://www.linkedin.com/pub/ben-centra/47/769/60a" title="Connect with me on LinkedIn">
+              <i class="fa fa-linkedin"></i>
+              <span class="username">Ben Centra</span>
+            </a>
+          </li>
+          
+        
+          
+        
+          
+        
+
+      </ul>
+    </div>
+
+    <div class="site-signature">
+      <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+      <p class="text">踏在代码的征程，与 Bug 共舞.
+</p>
+    </div>
+
+  </div>
+
+</footer>
+
+<!-- Scripts -->
+<script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.1/js/lightbox.min.js"></script>
+<script src="//unpkg.com/popper.js@1"></script>
+<script src="//unpkg.com/tippy.js@5"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  // Default syntax highlighting
+  hljs.initHighlightingOnLoad();
+
+  // Header
+  var menuToggle = $('#js-mobile-menu').unbind();
+  $('#js-navigation-menu').removeClass("show");
+  menuToggle.on('click', function(e) {
+    e.preventDefault();
+    $('#js-navigation-menu').slideToggle(function(){
+      if($('#js-navigation-menu').is(':hidden')) {
+        $('#js-navigation-menu').removeAttr('style');
+      }
+    });
+  });
+
+	// Enable tooltips via Tippy.js
+	if (Array.isArray(window.tooltips)) {
+		window.tooltips.forEach(function(tooltip) {
+			var selector = tooltip[0];
+			var config = tooltip[1];
+			tippy(selector, config);
+		})
+	}
+});
+
+</script>
+
+
+
+
+
+
+  </body>
+
+</html>

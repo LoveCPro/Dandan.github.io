@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>jekyll环境搭建</title>
+  <meta name="description" content="前言作为一名程序媛， 想搞个地方放自己整理的文件， 用过 csdn，或者本地的有道云笔记， 或者传到 github上， 但是感觉都不太高级。后来了解到可以通过github搭建的自己的博客网站， 甚是高级，值得搞一搞。">
+  
+  <meta name="author" content="Dandan">
+  <meta name="copyright" content="&copy; Dandan 2023">
+  
+
+  <!-- External libraries -->
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/monokai-sublime.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
+
+  <!-- Favicon and other icons (made with http://www.favicon-generator.org/) -->
+  <link rel="shortcut icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="57x57" href="/assets/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/assets/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/assets/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/assets/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="manifest" href="/assets/icons/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/assets/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <!-- Facebook OGP cards -->
+  <meta property="og:description" content="前言作为一名程序媛， 想搞个地方放自己整理的文件， 用过 csdn，或者本地的有道云笔记， 或者传到 github上， 但是感觉都不太高级。后来了解到可以通过github搭建的自己的博客网站， 甚是高级，值得搞一搞。" />
+  <meta property="og:url" content="http://0.0.0.0:5555/%E7%94%9F%E6%B4%BB/2019/12/16/build-jekyll.html">
+  <meta property="og:site_name" content="Dandan's blog" />
+  <meta property="og:title" content="jekyll环境搭建" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="http://0.0.0.0:5555/assets/guozhi.jpg" />
+  <meta property="og:image:type" content="image/jpg" />
+  <meta property="og:image:width" content="612" />
+  <meta property="og:image:height" content="605" />
+  
+
+  
+  <!-- Twitter: card tags -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="jekyll环境搭建">
+  <meta name="twitter:description" content="前言作为一名程序媛， 想搞个地方放自己整理的文件， 用过 csdn，或者本地的有道云笔记， 或者传到 github上， 但是感觉都不太高级。后来了解到可以通过github搭建的自己的博客网站， 甚是高级，值得搞一搞。">
+  <meta name="twitter:image" content="http://0.0.0.0:5555/assets/logo.png">
+  <meta name="twitter:url" content="http://0.0.0.0:5555/%E7%94%9F%E6%B4%BB/2019/12/16/build-jekyll.html">
+  
+
+  
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://0.0.0.0:5555/%E7%94%9F%E6%B4%BB/2019/12/16/build-jekyll.html">
+	<link rel="alternate" type="application/rss+xml" title="Dandan's blog" href="http://0.0.0.0:5555/feed.xml" />
+	
+	<!-- Tooltips -->
+	<script type="text/javascript">
+		window.tooltips = []
+	</script>
+</head>
+
+
+  <body>
+
+    <header class="navigation" role="banner">
+  <div class="navigation-wrapper">
+    <a href="/" class="logo">
+      
+      <img src="/assets/guozhi.jpg" alt="Dandan's blog">
+      
+    </a>
+    <a href="javascript:void(0)" class="navigation-menu-button" id="js-mobile-menu">
+      <i class="fa fa-bars"></i>
+    </a>
+    <nav role="navigation">
+      <ul id="js-navigation-menu" class="navigation-menu show">
+				
+	
+	<li class="nav-link"><a href="/about/">About</a>
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+	<li class="nav-link"><a href="/typography/">Typography</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+    <div class="page-content">
+        <div class="post">
+
+<div class="post-header-container " >
+  <div class="scrim ">
+    <header class="post-header">
+      <h1 class="title">jekyll环境搭建</h1>
+      <p class="info">by <strong>Dandan</strong></p>
+    </header>
+  </div>
+</div>
+
+<div class="wrapper">
+
+ <span class="page-divider">
+  <span class="one"></span>
+  <span class="two"></span>
+</span>
+ 
+
+<section class="post-meta">
+  <div class="post-date">December 16, 2019</div>
+  <div class="post-categories">
+  in 
+    
+    <a href="/category/生活">生活</a>
+    
+  
+  </div>
+</section>
+
+<article class="post-content">
+  <h1 id="前言">前言</h1>
+<p>作为一名程序媛， 想搞个地方放自己整理的文件， 用过 csdn，或者本地的有道云笔记， 或者传到 github上， 但是感觉都不太高级。后来了解到可以通过github搭建的自己的博客网站， 甚是高级，值得搞一搞。</p>
+
+<h1 id="一波三折">一波三折</h1>
+<p>我是一名基于linux平台得开发者，当然 使用linux系统要比windows要更舒服一些。所以一开始我就在linux上开始折腾，尝试了ubuntu18.0， 换了两个虚拟机， 都是各种问题， 某些gem包不能下载，jekyll一直下载不成功， 要么就是 下载成功了，<em>jekyll -v</em>也能显示版本号， 但是 <em>jekyll serve</em>使用时各种报错， 无奈以及无语。后来索性换了ubuntu20.04， 心想， 我都升级系统了， 总不会给我报错了吧，毕竟之前，18.04 默认安装ruby版本太低， 需要升级到20.04默认安装的ruby版本。但是， 天不随我愿， 还是一堆报错， 各种下载不了， 各种依赖问题。各种折腾之后，果断放弃。转战windows系统，由于本人在windows上使用不太熟悉， 先是在win7上， 遇到<code class="language-plaintext highlighter-rouge">ssl_connect returned=1 certificate verityu failed</code>报错，由于尝试的电脑是办公电脑，上边安装了很多的环境， 不敢随便动， 后来又转战自己打得一个服务器，用的是 win10, 安装成功。</p>
+
+<h1 id="安装">安装</h1>
+<h2 id="安装ruby">安装ruby</h2>
+<p>在Windows上使用RubyInstaller安装比较方便,去Ruby https://rubyinstaller.org/downloads/官网下载最新版本的RubyInstaller.注意32位和64位版本的区分. 注意：勾选添加到PATH选项,以便在命令行中使用。安装完成后会有一个安装msys2的界面，选择3， 回车。<img src="/assets/doc/jekyll_build_msys2.png" alt="安装msys2" /></p>
+
+<h2 id="安装rubygems">安装Rubygems</h2>
+<p>Windows中下载ZIP (下载页面 https://rubygems.org/pages/download)格式比较方便,下载后解压到任意路径.打开Windows的cmd界面,输入命令： $ cd {unzip-path} // unzip-path表示解压的路径, 然后执行<code class="language-plaintext highlighter-rouge">gem install jekyll</code>将会安装jekyll的一堆依赖，最后执行<code class="language-plaintext highlighter-rouge">jekyll -v</code>能成功。</p>
+
+<h2 id="使用">使用</h2>
+<p>网上找一个自己想要的模板， 改吧改吧， 改成自己的风格， 然后进入目录， 执行<code class="language-plaintext highlighter-rouge">jekyll serve --host 0.0.0.0</code> , 然后通过浏览器就可以访问啦。</p>
+
+<h1 id="坚持不懈没有什么解决不了的"><em>坚持不懈，没有什么解决不了的！</em></h1>
+
+</article>
+
+
+
+
+
+<section class="rss">
+  <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+</section>
+
+<section class="share">
+  <span>Share: </span>
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+      <a href="//www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2F0.0.0.0%3A5555%2F%25E7%2594%259F%25E6%25B4%25BB%2F2019%2F12%2F16%2Fbuild-jekyll.html"
+        onclick="window.open(this.href, 'linkedin-share', 'width=550,height=255');return false;">
+        <i class="fa fa-linkedin-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      <a href="//plus.google.com/share?title=jekyll%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA&url=http%3A%2F%2F0.0.0.0%3A5555%2F%25E7%2594%259F%25E6%25B4%25BB%2F2019%2F12%2F16%2Fbuild-jekyll.html"
+        onclick="window.open(this.href, 'google-plus-share', 'width=550,height=255');return false;">
+        <i class="fa fa-google-plus-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+</section>
+
+
+
+
+</div>
+</div>
+
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h3 class="footer-heading">Dandan's blog</h3>
+
+    <div class="site-navigation">
+
+      <p><strong>Site Map</strong></p>
+      <ul class="pages">
+				
+	
+	<li class="nav-link"><a href="/about/">About</a>
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+	<li class="nav-link"><a href="/typography/">Typography</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </div>
+
+    <div class="site-contact">
+
+      <p><strong>Contact</strong></p>
+      <ul class="social-media-list">
+        <li>
+          <a href="mailto:lyldylidanyang@163.com">
+            <i class="fa fa-envelope-o"></i>
+            <span class="username">lyldylidanyang@163.com</span>
+          </a>
+        </li>
+
+        
+          
+          <li>
+            <a href="https://blog.csdn.net/weixin_41855428?spm=1011.2415.3001.5343" title="Follow me on Twitter">
+              <i class="fa fa-twitter"></i>
+              <span class="username">TheBenCentra</span>
+            </a>
+          </li>
+          
+        
+          
+          <li>
+            <a href="https://github.com/LoveCPro" title="Fork me on GitHub">
+              <i class="fa fa-github"></i>
+              <span class="username">Dandan</span>
+            </a>
+          </li>
+          
+        
+          
+          <li>
+            <a href="https://www.linkedin.com/pub/ben-centra/47/769/60a" title="Connect with me on LinkedIn">
+              <i class="fa fa-linkedin"></i>
+              <span class="username">Ben Centra</span>
+            </a>
+          </li>
+          
+        
+          
+        
+          
+        
+
+      </ul>
+    </div>
+
+    <div class="site-signature">
+      <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+      <p class="text">踏在代码的征程，与 Bug 共舞.
+</p>
+    </div>
+
+  </div>
+
+</footer>
+
+<!-- Scripts -->
+<script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.1/js/lightbox.min.js"></script>
+<script src="//unpkg.com/popper.js@1"></script>
+<script src="//unpkg.com/tippy.js@5"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  // Default syntax highlighting
+  hljs.initHighlightingOnLoad();
+
+  // Header
+  var menuToggle = $('#js-mobile-menu').unbind();
+  $('#js-navigation-menu').removeClass("show");
+  menuToggle.on('click', function(e) {
+    e.preventDefault();
+    $('#js-navigation-menu').slideToggle(function(){
+      if($('#js-navigation-menu').is(':hidden')) {
+        $('#js-navigation-menu').removeAttr('style');
+      }
+    });
+  });
+
+	// Enable tooltips via Tippy.js
+	if (Array.isArray(window.tooltips)) {
+		window.tooltips.forEach(function(tooltip) {
+			var selector = tooltip[0];
+			var config = tooltip[1];
+			tippy(selector, config);
+		})
+	}
+});
+
+</script>
+
+
+
+
+
+
+  </body>
+
+</html>

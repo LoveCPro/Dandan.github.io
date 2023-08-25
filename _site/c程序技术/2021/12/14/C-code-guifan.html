@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>C代码自我编程规范</title>
+  <meta name="description" content="前言发现C程序没有一个标准的规范，就像if else后的{如果跟在if当前行或者单独起行都可，但是如果一个文件中有的{在单独行，有的在上边那一行，这样就看着很乱，或者一个人写的代码有的在同一行有的在下边，还是不一致，虽然无大碍，但还是别扭， 没办法， 哈哈， 有点代码洁癖，看不得不一致的东西。所以给自我做一个约束。">
+  
+  <meta name="author" content="Dandan">
+  <meta name="copyright" content="&copy; Dandan 2023">
+  
+
+  <!-- External libraries -->
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/monokai-sublime.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
+
+  <!-- Favicon and other icons (made with http://www.favicon-generator.org/) -->
+  <link rel="shortcut icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="57x57" href="/assets/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/assets/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/assets/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/assets/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="manifest" href="/assets/icons/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/assets/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <!-- Facebook OGP cards -->
+  <meta property="og:description" content="前言发现C程序没有一个标准的规范，就像if else后的{如果跟在if当前行或者单独起行都可，但是如果一个文件中有的{在单独行，有的在上边那一行，这样就看着很乱，或者一个人写的代码有的在同一行有的在下边，还是不一致，虽然无大碍，但还是别扭， 没办法， 哈哈， 有点代码洁癖，看不得不一致的东西。所以给自我做一个约束。" />
+  <meta property="og:url" content="http://0.0.0.0:5555/c%E7%A8%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/2021/12/14/C-code-guifan.html">
+  <meta property="og:site_name" content="Dandan's blog" />
+  <meta property="og:title" content="C代码自我编程规范" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="http://0.0.0.0:5555/assets/guozhi.jpg" />
+  <meta property="og:image:type" content="image/jpg" />
+  <meta property="og:image:width" content="612" />
+  <meta property="og:image:height" content="605" />
+  
+
+  
+  <!-- Twitter: card tags -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="C代码自我编程规范">
+  <meta name="twitter:description" content="前言发现C程序没有一个标准的规范，就像if else后的{如果跟在if当前行或者单独起行都可，但是如果一个文件中有的{在单独行，有的在上边那一行，这样就看着很乱，或者一个人写的代码有的在同一行有的在下边，还是不一致，虽然无大碍，但还是别扭， 没办法， 哈哈， 有点代码洁癖，看不得不一致的东西。所以给自我做一个约束。">
+  <meta name="twitter:image" content="http://0.0.0.0:5555/assets/logo.png">
+  <meta name="twitter:url" content="http://0.0.0.0:5555/c%E7%A8%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/2021/12/14/C-code-guifan.html">
+  
+
+  
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://0.0.0.0:5555/c%E7%A8%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/2021/12/14/C-code-guifan.html">
+	<link rel="alternate" type="application/rss+xml" title="Dandan's blog" href="http://0.0.0.0:5555/feed.xml" />
+	
+	<!-- Tooltips -->
+	<script type="text/javascript">
+		window.tooltips = []
+	</script>
+</head>
+
+
+  <body>
+
+    <header class="navigation" role="banner">
+  <div class="navigation-wrapper">
+    <a href="/" class="logo">
+      
+      <img src="/assets/guozhi.jpg" alt="Dandan's blog">
+      
+    </a>
+    <a href="javascript:void(0)" class="navigation-menu-button" id="js-mobile-menu">
+      <i class="fa fa-bars"></i>
+    </a>
+    <nav role="navigation">
+      <ul id="js-navigation-menu" class="navigation-menu show">
+				
+	
+	<li class="nav-link"><a href="/about/">About</a>
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+	<li class="nav-link"><a href="/typography/">Typography</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+    <div class="page-content">
+        <div class="post">
+
+<div class="post-header-container " >
+  <div class="scrim ">
+    <header class="post-header">
+      <h1 class="title">C代码自我编程规范</h1>
+      <p class="info">by <strong>Dandan</strong></p>
+    </header>
+  </div>
+</div>
+
+<div class="wrapper">
+
+ <span class="page-divider">
+  <span class="one"></span>
+  <span class="two"></span>
+</span>
+ 
+
+<section class="post-meta">
+  <div class="post-date">December 14, 2021</div>
+  <div class="post-categories">
+  in 
+    
+    <a href="/category/C程序技术">C程序技术</a>
+    
+  
+  </div>
+</section>
+
+<article class="post-content">
+  <h1 id="前言">前言</h1>
+<p>发现C程序没有一个标准的规范，就像if else后的<code class="language-plaintext highlighter-rouge">{</code>如果跟在if当前行或者单独起行都可，但是如果一个文件中有的<code class="language-plaintext highlighter-rouge">{</code>在单独行，有的在上边那一行，这样就看着很乱，或者一个人写的代码有的在同一行有的在下边，还是不一致，虽然无大碍，但还是别扭， 没办法， 哈哈， 有点代码洁癖，看不得不一致的东西。所以给自我做一个约束。</p>
+
+<h1 id="命名">命名</h1>
+<h2 id="变量的命名">变量的命名</h2>
+<p>对所有的宏、全局变量都要有详细的注释   ：功能、取值范围、以及其他的注意事项，注释切记与上边的代码行隔开
+i、j、k对于局部变量是允许的</p>
+<ul>
+  <li>不建议大小写混写</li>
+  <li>建议驼峰命名法：驼峰命名法就是当变量名或函数名是由一个或多个单字连结在一起,而构成的唯一识别字时,第一个单字以小写字母开始,第二个单字的首字母大写;或每一个单字的首字母都采用大写字母,例如:myFirstName、myLastName,这样的变量名看上去就像骆驼峰一样此起彼伏,故而得名。</li>
+  <li>当标识符是一个单词时，首字母小写</li>
+  <li>不要使用拼音</li>
+  <li>全局变量应该前加g_  ,静态变量前应该加 s_</li>
+  <li>指针的 * 应该紧挨着变量</li>
+  <li>枚举应该用大写</li>
+  <li>常量名用大写</li>
+</ul>
+
+<h2 id="函数的命名">函数的命名</h2>
+<ul>
+  <li>函数名应该以动词开头  因为函数是一组具有特 定功能的语句块。比如一个函数，它用于取得外部输入的数值，则可以命名为get_input_number。</li>
+  <li>
+    <h2 id="宏">宏</h2>
+    <p>全大写</p>
+  </li>
+</ul>
+
+<h1 id="代码间行数的间隔">代码间行数的间隔</h1>
+<h2 id="独立的代码块-和变量之间必须加空行">独立的代码块 和变量之间必须加空行</h2>
+<p>例如：如下不符合规范</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">valid_ni</span><span class="p">(</span><span class="n">ni</span><span class="p">))</span> 
+<span class="p">{</span> 
+ <span class="p">...</span> <span class="c1">// program code </span>
+<span class="p">}</span> 
+<span class="n">repssn_ind</span> <span class="o">=</span> <span class="n">ssn_data</span><span class="p">[</span><span class="n">index</span><span class="p">].</span><span class="n">repssn_index</span><span class="p">;</span> 
+<span class="n">repssn_ni</span> <span class="o">=</span> <span class="n">ssn_data</span><span class="p">[</span><span class="n">index</span><span class="p">].</span><span class="n">ni</span><span class="p">;</span>
+</code></pre></div></div>
+<p>应该书写如下：</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">valid_ni</span><span class="p">(</span><span class="n">ni</span><span class="p">))</span> 
+<span class="p">{</span> 
+ <span class="p">...</span> <span class="c1">// program code </span>
+<span class="p">}</span> 
+
+<span class="n">repssn_ind</span> <span class="o">=</span> <span class="n">ssn_data</span><span class="p">[</span><span class="n">index</span><span class="p">].</span><span class="n">repssn_index</span><span class="p">;</span> 
+<span class="n">repssn_ni</span> <span class="o">=</span> <span class="n">ssn_data</span><span class="p">[</span><span class="n">index</span><span class="p">].</span><span class="n">ni</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h1 id="一行分多行写的规范">一行分多行写的规范</h1>
+<h2 id="一长行语句划分多行">一长行语句划分多行</h2>
+<p>长表达式要在低优先级操作符处划分新行，
+操作符放在新行之首，划分出的新行要进行适当的缩进，使排版整齐，语句可读。<br />
+示例：</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">示例：</span>
+<span class="n">perm_count_msg</span><span class="p">.</span><span class="n">head</span><span class="p">.</span><span class="n">len</span> <span class="o">=</span> <span class="n">NO7_TO_STAT_PERM_COUNT_LEN</span> 
+    <span class="o">+</span> <span class="n">STAT_SIZE_PER_FRAM</span> <span class="o">*</span> <span class="nf">sizeof</span><span class="p">(</span> <span class="n">_UL</span> <span class="p">);</span> 
+ 
+<span class="n">act_task_table</span><span class="p">[</span><span class="n">frame_id</span> <span class="o">*</span> <span class="n">STAT_TASK_CHECK_NUMBER</span> <span class="o">+</span> <span class="n">index</span><span class="p">].</span><span class="n">occupied</span> 
+    <span class="o">=</span> <span class="n">stat_poi</span><span class="p">[</span><span class="n">index</span><span class="p">].</span><span class="n">occupied</span><span class="p">;</span> 
+
+<span class="n">act_task_table</span><span class="p">[</span><span class="n">taskno</span><span class="p">].</span><span class="n">duration_true_or_false</span> 
+    <span class="o">=</span> <span class="n">SYS_get_sccp_statistic_state</span><span class="p">(</span> <span class="n">stat_item</span> <span class="p">);</span> 
+
+<span class="n">report_or_not_flag</span> <span class="o">=</span> <span class="p">((</span><span class="n">taskno</span> <span class="o">&lt;</span> <span class="n">MAX_ACT_TASK_NUMBER</span><span class="p">)</span>
+    <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">n7stat_stat_item_valid</span> <span class="p">(</span><span class="n">stat_item</span><span class="p">))</span> 
+    <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">act_task_table</span><span class="p">[</span><span class="n">taskno</span><span class="p">].</span><span class="n">result_data</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">));</span>
+</code></pre></div></div>
+
+<h2 id="循环判断的长行">循环、判断的长行</h2>
+<p>长表达式要在低优先级操作符处划分新行，操作符放在新行之首<br />
+示例：</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">((</span><span class="n">taskno</span> <span class="o">&lt;</span> <span class="n">max_act_task_number</span><span class="p">)</span> 
+ <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">n7stat_stat_item_valid</span> <span class="p">(</span><span class="n">stat_item</span><span class="p">)))</span> 
+<span class="p">{</span> 
+ <span class="p">...</span> <span class="c1">// program code </span>
+<span class="p">}</span> 
+
+<span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">BufferKeyword</span><span class="p">[</span><span class="n">word_index</span><span class="p">].</span><span class="n">word_length</span><span class="p">)</span> 
+ <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">j</span> <span class="o">&lt;</span> <span class="n">NewKeyword</span><span class="p">.</span><span class="n">word_length</span><span class="p">);</span> <span class="n">i</span><span class="o">++</span><span class="p">,</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> 
+<span class="p">{</span> 
+ <span class="p">...</span> <span class="c1">// program code </span>
+
+<span class="p">}</span> 
+
+<span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> 
+ <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">first_word_length</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">j</span> <span class="o">&lt;</span> <span class="n">second_word_length</span><span class="p">);</span> 
+ <span class="n">i</span><span class="o">++</span><span class="p">,</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> 
+<span class="p">{</span> 
+ <span class="p">...</span> <span class="c1">// program code </span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="函数名或过程的参数过程也应该划分">函数名或过程的参数过程，也应该划分</h2>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">n7stat_str_compare</span><span class="p">((</span><span class="n">BYTE</span> <span class="o">*</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">stat_object</span><span class="p">,</span> 
+    <span class="p">(</span><span class="n">BYTE</span> <span class="o">*</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">act_task_table</span><span class="p">[</span><span class="n">taskno</span><span class="p">].</span><span class="n">stat_object</span><span class="p">),</span> 
+    <span class="k">sizeof</span> <span class="p">(</span><span class="n">_STAT_OBJECT</span><span class="p">));</span> 
+ 
+<span class="n">n7stat_flash_act_duration</span><span class="p">(</span> <span class="n">stat_item</span><span class="p">,</span> <span class="n">frame_id</span> <span class="o">*</span><span class="n">STAT_TASK_CHECK_NUMBER</span> 
+    <span class="o">+</span> <span class="n">index</span><span class="p">,</span> <span class="n">stat_object</span> <span class="p">);</span>
+</code></pre></div></div>
+
+<h1 id="应用">{}应用</h1>
+<p>if、for、do、while等语句独占一行，且执行语句部分无论多少都要加括号{}。 
+示例：如下例子不符合规范。</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="n">pUserCR</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span> 
+</code></pre></div></div>
+<p>应如下书写：</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="n">pUserCR</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> 
+<span class="p">{</span> 
+ <span class="k">return</span><span class="p">;</span> 
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="注释">注释</h1>
+<p>尽量写好注释</p>
+<h2 id="解决的bug单">解决的bug单</h2>
+<p>解决问题单的代码处 标记处 对应的是解决哪个单字</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/*
+*added by lidy at 2021/7/8
+*解决从内核socket中读取不到部分br-lan、br-wan接口的问题，读取uci文件将这些接口重新添加一遍；
+*/</span>
+</code></pre></div></div>
+<p>或者</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 修复计算错误：更正了算法逻辑</span>
+<span class="c1">// 作者：John Doe</span>
+<span class="c1">// 日期：2023-06-16</span>
+</code></pre></div></div>
+
+</article>
+
+
+
+
+
+<section class="rss">
+  <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+</section>
+
+<section class="share">
+  <span>Share: </span>
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+      <a href="//www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2F0.0.0.0%3A5555%2Fc%25E7%25A8%258B%25E5%25BA%258F%25E6%258A%2580%25E6%259C%25AF%2F2021%2F12%2F14%2FC-code-guifan.html"
+        onclick="window.open(this.href, 'linkedin-share', 'width=550,height=255');return false;">
+        <i class="fa fa-linkedin-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      <a href="//plus.google.com/share?title=C%E4%BB%A3%E7%A0%81%E8%87%AA%E6%88%91%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83&url=http%3A%2F%2F0.0.0.0%3A5555%2Fc%25E7%25A8%258B%25E5%25BA%258F%25E6%258A%2580%25E6%259C%25AF%2F2021%2F12%2F14%2FC-code-guifan.html"
+        onclick="window.open(this.href, 'google-plus-share', 'width=550,height=255');return false;">
+        <i class="fa fa-google-plus-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+</section>
+
+
+
+
+</div>
+</div>
+
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h3 class="footer-heading">Dandan's blog</h3>
+
+    <div class="site-navigation">
+
+      <p><strong>Site Map</strong></p>
+      <ul class="pages">
+				
+	
+	<li class="nav-link"><a href="/about/">About</a>
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+	<li class="nav-link"><a href="/typography/">Typography</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </div>
+
+    <div class="site-contact">
+
+      <p><strong>Contact</strong></p>
+      <ul class="social-media-list">
+        <li>
+          <a href="mailto:lyldylidanyang@163.com">
+            <i class="fa fa-envelope-o"></i>
+            <span class="username">lyldylidanyang@163.com</span>
+          </a>
+        </li>
+
+        
+          
+          <li>
+            <a href="https://blog.csdn.net/weixin_41855428?spm=1011.2415.3001.5343" title="Follow me on Twitter">
+              <i class="fa fa-twitter"></i>
+              <span class="username">TheBenCentra</span>
+            </a>
+          </li>
+          
+        
+          
+          <li>
+            <a href="https://github.com/LoveCPro" title="Fork me on GitHub">
+              <i class="fa fa-github"></i>
+              <span class="username">Dandan</span>
+            </a>
+          </li>
+          
+        
+          
+          <li>
+            <a href="https://www.linkedin.com/pub/ben-centra/47/769/60a" title="Connect with me on LinkedIn">
+              <i class="fa fa-linkedin"></i>
+              <span class="username">Ben Centra</span>
+            </a>
+          </li>
+          
+        
+          
+        
+          
+        
+
+      </ul>
+    </div>
+
+    <div class="site-signature">
+      <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+      <p class="text">踏在代码的征程，与 Bug 共舞.
+</p>
+    </div>
+
+  </div>
+
+</footer>
+
+<!-- Scripts -->
+<script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.1/js/lightbox.min.js"></script>
+<script src="//unpkg.com/popper.js@1"></script>
+<script src="//unpkg.com/tippy.js@5"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  // Default syntax highlighting
+  hljs.initHighlightingOnLoad();
+
+  // Header
+  var menuToggle = $('#js-mobile-menu').unbind();
+  $('#js-navigation-menu').removeClass("show");
+  menuToggle.on('click', function(e) {
+    e.preventDefault();
+    $('#js-navigation-menu').slideToggle(function(){
+      if($('#js-navigation-menu').is(':hidden')) {
+        $('#js-navigation-menu').removeAttr('style');
+      }
+    });
+  });
+
+	// Enable tooltips via Tippy.js
+	if (Array.isArray(window.tooltips)) {
+		window.tooltips.forEach(function(tooltip) {
+			var selector = tooltip[0];
+			var config = tooltip[1];
+			tippy(selector, config);
+		})
+	}
+});
+
+</script>
+
+
+
+
+
+
+  </body>
+
+</html>

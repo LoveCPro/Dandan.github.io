@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>sysrepo源码解析</title>
+  <meta name="description" content="前言Sysrepo 是一个用于网络设备的轻量级、模块化的配置和状态数据存储库。它以高效的方式存储、管理和检索设备的配置数据，同时支持实时监控设备的运行状态。">
+  
+  <meta name="author" content="Dandan">
+  <meta name="copyright" content="&copy; Dandan 2023">
+  
+
+  <!-- External libraries -->
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/monokai-sublime.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
+
+  <!-- Favicon and other icons (made with http://www.favicon-generator.org/) -->
+  <link rel="shortcut icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="57x57" href="/assets/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/assets/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/assets/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/assets/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="manifest" href="/assets/icons/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/assets/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <!-- Facebook OGP cards -->
+  <meta property="og:description" content="前言Sysrepo 是一个用于网络设备的轻量级、模块化的配置和状态数据存储库。它以高效的方式存储、管理和检索设备的配置数据，同时支持实时监控设备的运行状态。" />
+  <meta property="og:url" content="http://0.0.0.0:5555/openwrt/2020/09/27/sysrepo-src.html">
+  <meta property="og:site_name" content="Dandan's blog" />
+  <meta property="og:title" content="sysrepo源码解析" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="http://0.0.0.0:5555/assets/guozhi.jpg" />
+  <meta property="og:image:type" content="image/jpg" />
+  <meta property="og:image:width" content="612" />
+  <meta property="og:image:height" content="605" />
+  
+
+  
+  <!-- Twitter: card tags -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="sysrepo源码解析">
+  <meta name="twitter:description" content="前言Sysrepo 是一个用于网络设备的轻量级、模块化的配置和状态数据存储库。它以高效的方式存储、管理和检索设备的配置数据，同时支持实时监控设备的运行状态。">
+  <meta name="twitter:image" content="http://0.0.0.0:5555/assets/logo.png">
+  <meta name="twitter:url" content="http://0.0.0.0:5555/openwrt/2020/09/27/sysrepo-src.html">
+  
+
+  
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://0.0.0.0:5555/openwrt/2020/09/27/sysrepo-src.html">
+	<link rel="alternate" type="application/rss+xml" title="Dandan's blog" href="http://0.0.0.0:5555/feed.xml" />
+	
+	<!-- Tooltips -->
+	<script type="text/javascript">
+		window.tooltips = []
+	</script>
+</head>
+
+
+  <body>
+
+    <header class="navigation" role="banner">
+  <div class="navigation-wrapper">
+    <a href="/" class="logo">
+      
+      <img src="/assets/guozhi.jpg" alt="Dandan's blog">
+      
+    </a>
+    <a href="javascript:void(0)" class="navigation-menu-button" id="js-mobile-menu">
+      <i class="fa fa-bars"></i>
+    </a>
+    <nav role="navigation">
+      <ul id="js-navigation-menu" class="navigation-menu show">
+				
+	
+	<li class="nav-link"><a href="/about/">About</a>
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+	<li class="nav-link"><a href="/typography/">Typography</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+    <div class="page-content">
+        <div class="post">
+
+<div class="post-header-container " >
+  <div class="scrim ">
+    <header class="post-header">
+      <h1 class="title">sysrepo源码解析</h1>
+      <p class="info">by <strong>Dandan</strong></p>
+    </header>
+  </div>
+</div>
+
+<div class="wrapper">
+
+ <span class="page-divider">
+  <span class="one"></span>
+  <span class="two"></span>
+</span>
+ 
+
+<section class="post-meta">
+  <div class="post-date">September 27, 2020</div>
+  <div class="post-categories">
+  in 
+    
+    <a href="/category/openwrt">Openwrt</a>
+    
+  
+  </div>
+</section>
+
+<article class="post-content">
+  <h1 id="前言">前言</h1>
+<p>Sysrepo 是一个用于网络设备的轻量级、模块化的配置和状态数据存储库。它以高效的方式存储、管理和检索设备的配置数据，同时支持实时监控设备的运行状态。</p>
+
+<h2 id="主要特性">主要特性</h2>
+
+<ul>
+  <li>
+    <p><strong>模块化架构</strong>：Sysrepo 的设计理念是模块化的，每个模块负责特定设备功能的配置和状态管理。这使得系统的可维护性和可扩展性得以提高。</p>
+  </li>
+  <li>
+    <p><strong>YANG 数据模型</strong>：Sysrepo 使用 YANG 数据建模语言来描述设备的配置和状态。YANG 提供了一种标准化的方式来定义设备的数据模型，使得不同厂家的设备都可以基于共同的规范进行管理。</p>
+  </li>
+  <li>
+    <p><strong>快速读写操作</strong>：Sysrepo 以高性能处理读写操作，确保了实时配置更改和状态监测的效率。</p>
+  </li>
+  <li>
+    <p><strong>事务支持</strong>：Sysrepo 支持事务，保证了在配置更改过程中的一致性和可回滚性。</p>
+  </li>
+  <li>
+    <p><strong>通用 API</strong>：Sysrepo 提供了易于使用的 API，供开发人员构建自定义的网络管理应用程序。</p>
+  </li>
+  <li>
+    <p><strong>与各种协议兼容</strong>：Sysrepo 支持 RESTCONF、NETCONF 等标准协议，使得网络管理可以基于通用的网络协议进行。</p>
+  </li>
+</ul>
+
+<h2 id="应用领域">应用领域</h2>
+
+<ul>
+  <li>
+    <p><strong>网络设备管理</strong>：Sysrepo 可用于管理路由器、交换机等各种网络设备的配置和状态信息。</p>
+  </li>
+  <li>
+    <p><strong>SDN 控制器</strong>：在软件定义网络中，Sysrepo 可以作为 SDN 控制器的基础，实现集中式的网络管理。</p>
+  </li>
+  <li>
+    <p><strong>网络自动化</strong>：Sysrepo 可以与自动化工具集成，实现网络配置的自动化部署和维护。</p>
+    <h2 id="一sysrepo-源码分析">一、sysrepo 源码分析</h2>
+    <p>应用程序通过将对 sysrepo 的调用通过 sysrepo 提供的相应的 API 接口访问方法，称为 syrepo 的间接访问方法。该方法是应用程序通过创建 Deamon 进程，通过 IPC Shm 机制与 sysrepo 通信。可以做到对 sysrepo 的即插即用，最后由 sysrepo 纳管，这就是 Plugind，命名为 sysrepo-plugind。要快速的使用 sysrepo，并快速开发出适配于 sysrepo 的插件，就要先了解 sysrepo-plugind 的实现原理与机制，就需要先从实现 sysrepo-plugind 的源码处着手。sysrepo 源码路径：git clone https://github.com/sysrepo/sysrepo.git 。 Sysrepo-plugind 实现的路径为 sysrepo/src/executables/sysrepo-plugind.c 。下面也就从该文件开始说。</p>
+  </li>
+</ul>
+
+<h3 id="11-数据结构">1.1 数据结构</h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/** protected flag for terminating sysrepo-plugind */</span>
+<span class="kt">int</span> <span class="n">loop_finish</span><span class="p">;</span>
+<span class="n">pthread_mutex_t</span> <span class="n">lock</span> <span class="o">=</span> <span class="n">PTHREAD_MUTEX_INITIALIZER</span><span class="p">;</span>
+<span class="n">pthread_cond_t</span> <span class="n">cond</span> <span class="o">=</span> <span class="n">PTHREAD_COND_INITIALIZER</span><span class="p">;</span>
+
+<span class="k">struct</span> <span class="n">srpd_plugin_s</span> <span class="p">{</span>
+    <span class="kt">void</span> <span class="o">*</span><span class="n">handle</span><span class="p">;</span>
+    <span class="n">srp_init_cb_t</span> <span class="n">init_cb</span><span class="p">;</span>
+    <span class="n">srp_cleanup_cb_t</span> <span class="n">cleanup_cb</span><span class="p">;</span>
+    <span class="kt">void</span> <span class="o">*</span><span class="n">private_data</span><span class="p">;</span>
+<span class="p">};</span>
+
+</code></pre></div></div>
+<h3 id="12-main函数入口">1.2 main函数入口</h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span>
+<span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">struct</span> <span class="n">srpd_plugin_s</span> <span class="o">*</span><span class="n">plugins</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="n">sr_conn_ctx_t</span> <span class="o">*</span><span class="n">conn</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="n">sr_session_ctx_t</span> <span class="o">*</span><span class="n">sess</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="n">sr_log_level_t</span> <span class="n">log_level</span> <span class="o">=</span> <span class="n">SR_LL_ERR</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">plugin_count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">rc</span> <span class="o">=</span> <span class="n">EXIT_FAILURE</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">debug</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">option</span> <span class="n">options</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="p">{</span><span class="s">"help"</span><span class="p">,</span>      <span class="n">no_argument</span><span class="p">,</span>       <span class="nb">NULL</span><span class="p">,</span> <span class="sc">'h'</span><span class="p">},</span>
+        <span class="p">{</span><span class="s">"version"</span><span class="p">,</span>   <span class="n">no_argument</span><span class="p">,</span>       <span class="nb">NULL</span><span class="p">,</span> <span class="sc">'V'</span><span class="p">},</span>
+        <span class="p">{</span><span class="s">"verbosity"</span><span class="p">,</span> <span class="n">required_argument</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="sc">'v'</span><span class="p">},</span>
+        <span class="p">{</span><span class="s">"debug"</span><span class="p">,</span>     <span class="n">no_argument</span><span class="p">,</span>       <span class="nb">NULL</span><span class="p">,</span> <span class="sc">'d'</span><span class="p">},</span>
+        <span class="p">{</span><span class="nb">NULL</span><span class="p">,</span>        <span class="mi">0</span><span class="p">,</span>                 <span class="nb">NULL</span><span class="p">,</span> <span class="mi">0</span><span class="p">},</span>
+    <span class="p">};</span>
+
+    <span class="cm">/* 解析sysrepo-plugind的参数，默认是 sysrepo-plugind -d -v 0  */</span>
+    <span class="n">opterr</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">((</span><span class="n">opt</span> <span class="o">=</span> <span class="n">getopt_long</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="s">"hVv:d"</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">))</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="n">opt</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="sc">'h'</span><span class="p">:</span>
+            <span class="n">version_print</span><span class="p">();</span>
+            <span class="n">help_print</span><span class="p">();</span>
+            <span class="n">rc</span> <span class="o">=</span> <span class="n">EXIT_SUCCESS</span><span class="p">;</span>
+            <span class="k">goto</span> <span class="n">cleanup</span><span class="p">;</span>
+        <span class="k">case</span> <span class="sc">'V'</span><span class="p">:</span>
+            <span class="n">version_print</span><span class="p">();</span>
+            <span class="n">rc</span> <span class="o">=</span> <span class="n">EXIT_SUCCESS</span><span class="p">;</span>
+            <span class="k">goto</span> <span class="n">cleanup</span><span class="p">;</span>
+        <span class="k">case</span> <span class="sc">'v'</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">strcmp</span><span class="p">(</span><span class="n">optarg</span><span class="p">,</span> <span class="s">"none"</span><span class="p">))</span> <span class="p">{</span>
+                <span class="n">log_level</span> <span class="o">=</span> <span class="n">SR_LL_NONE</span><span class="p">;</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">strcmp</span><span class="p">(</span><span class="n">optarg</span><span class="p">,</span> <span class="s">"error"</span><span class="p">))</span> <span class="p">{</span>
+                <span class="n">log_level</span> <span class="o">=</span> <span class="n">SR_LL_ERR</span><span class="p">;</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">strcmp</span><span class="p">(</span><span class="n">optarg</span><span class="p">,</span> <span class="s">"warning"</span><span class="p">))</span> <span class="p">{</span>
+                <span class="n">log_level</span> <span class="o">=</span> <span class="n">SR_LL_WRN</span><span class="p">;</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">strcmp</span><span class="p">(</span><span class="n">optarg</span><span class="p">,</span> <span class="s">"info"</span><span class="p">))</span> <span class="p">{</span>
+                <span class="n">log_level</span> <span class="o">=</span> <span class="n">SR_LL_INF</span><span class="p">;</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">strcmp</span><span class="p">(</span><span class="n">optarg</span><span class="p">,</span> <span class="s">"debug"</span><span class="p">))</span> <span class="p">{</span>
+                <span class="n">log_level</span> <span class="o">=</span> <span class="n">SR_LL_DBG</span><span class="p">;</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">((</span><span class="n">strlen</span><span class="p">(</span><span class="n">optarg</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">optarg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="sc">'0'</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">optarg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="sc">'4'</span><span class="p">))</span> <span class="p">{</span>
+                <span class="n">log_level</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">(</span><span class="n">optarg</span><span class="p">);</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="n">error_print</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">"Invalid verbosity </span><span class="se">\"</span><span class="s">%s</span><span class="se">\"</span><span class="s">"</span><span class="p">,</span> <span class="n">optarg</span><span class="p">);</span>
+                <span class="k">goto</span> <span class="n">cleanup</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="sc">'d'</span><span class="p">:</span>
+            <span class="n">debug</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="nl">default:</span>
+            <span class="n">error_print</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">"Invalid option or missing argument: -%c"</span><span class="p">,</span> <span class="n">optopt</span><span class="p">);</span>
+            <span class="k">goto</span> <span class="n">cleanup</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* check for additional argument */</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">optind</span> <span class="o">&lt;</span> <span class="n">argc</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">error_print</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">"Redundant parameters"</span><span class="p">);</span>
+        <span class="k">goto</span> <span class="n">cleanup</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* 加载插件库 ，默认在 /usr/lib/sysrepo/plugins */</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">load_plugins</span><span class="p">(</span><span class="o">&amp;</span><span class="n">plugins</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">plugin_count</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">goto</span> <span class="n">cleanup</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* daemonize, sysrepo-plugind no longer directly logs to stderr */</span>
+    <span class="n">daemon_init</span><span class="p">(</span><span class="n">debug</span><span class="p">,</span> <span class="n">log_level</span><span class="p">);</span>
+
+    <span class="cm">/* create connection (after we have forked so that our PID is correct) */</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">r</span> <span class="o">=</span> <span class="n">sr_connect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">conn</span><span class="p">))</span> <span class="o">!=</span> <span class="n">SR_ERR_OK</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">error_print</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="s">"Failed to connect"</span><span class="p">);</span>
+        <span class="k">goto</span> <span class="n">cleanup</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* create session */</span>
+    <span class="cm">/*调用sysrepo API(sr_session_start)创建与sysrepo running库的会话，并启动该会话*/</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">r</span> <span class="o">=</span> <span class="n">sr_session_start</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">SR_DS_RUNNING</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">sess</span><span class="p">))</span> <span class="o">!=</span> <span class="n">SR_ERR_OK</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">error_print</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="s">"Failed to start new session"</span><span class="p">);</span>
+        <span class="k">goto</span> <span class="n">cleanup</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* init plugins */</span>
+    <span class="cm">/*对所有已加载的plugin通过调用init_cb注册的回调初始化，这是整个main第二处核心点，与用户是强 
+     *相关用户开发的插件，注册，订阅，初始化都通过init_cb，否则不能将sysrepol通信连接*/</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">plugin_count</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">plugins</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">init_cb</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">plugins</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">private_data</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">r</span> <span class="o">!=</span> <span class="n">SR_ERR_OK</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">SRP_LOG_ERR</span><span class="p">(</span><span class="s">"Plugin initialization failed (%s)."</span><span class="p">,</span> <span class="n">sr_strerror</span><span class="p">(</span><span class="n">r</span><span class="p">));</span>
+            <span class="k">goto</span> <span class="n">cleanup</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* wait for a terminating signal */</span>
+    <span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lock</span><span class="p">);</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">loop_finish</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">pthread_cond_wait</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cond</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">lock</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lock</span><span class="p">);</span>
+
+    <span class="cm">/* cleanup plugins */</span>
+    <span class="cm">/*进程结束后，回收初始申请的资源，如果不进行回收，部分版本会报段错误*/</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">plugin_count</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">plugins</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">cleanup_cb</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="n">plugins</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">private_data</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* success */</span>
+    <span class="n">rc</span> <span class="o">=</span> <span class="n">EXIT_SUCCESS</span><span class="p">;</span>
+
+<span class="nl">cleanup:</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">plugin_count</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">dlclose</span><span class="p">(</span><span class="n">plugins</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">handle</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">free</span><span class="p">(</span><span class="n">plugins</span><span class="p">);</span>
+
+    <span class="n">sr_disconnect</span><span class="p">(</span><span class="n">conn</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">rc</span><span class="p">;</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<h3 id="13-load_plugin">1.3 load_plugin</h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">static</span> <span class="kt">int</span>
+<span class="nf">load_plugins</span><span class="p">(</span><span class="k">struct</span> <span class="n">srpd_plugin_s</span> <span class="o">**</span><span class="n">plugins</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">plugin_count</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">void</span> <span class="o">*</span><span class="n">mem</span><span class="p">,</span> <span class="o">*</span><span class="n">handle</span><span class="p">;</span>
+    <span class="kt">DIR</span> <span class="o">*</span><span class="n">dir</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">dirent</span> <span class="o">*</span><span class="n">ent</span><span class="p">;</span>
+    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">plugins_dir</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">path</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">rc</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="o">*</span><span class="n">plugins</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="o">*</span><span class="n">plugin_count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="cm">/* get plugins dir from environment variable, or use default one */</span>
+    <span class="cm">/*获取路径，在@PLUGINS_PATH@在CMakeList.txt中定义，在编译时也可以自定义*/</span>
+    <span class="n">plugins_dir</span> <span class="o">=</span> <span class="n">getenv</span><span class="p">(</span><span class="s">"SRPD_PLUGINS_PATH"</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">plugins_dir</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">plugins_dir</span> <span class="o">=</span> <span class="n">SRPD_PLUGINS_PATH</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* create the directory if it does not exist */</span>
+    <span class="cm">/*access函数，:检查调用进程是否可以对指定的文件执行某种操作， F_OK文件是否存在
+     * 本段代码是检测SRPD_PLUGINS_PATH目录是否存在，如果不存在，调用sr_mkpath创建目录，并设置*            
+     * 目录的访问权限000777。本段代码是安全性代码，确保指定的路径存在。对于实际开发中，是通过编 
+     * 译是指定，不存在路径的动态库无法安装。*/</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">access</span><span class="p">(</span><span class="n">plugins_dir</span><span class="p">,</span> <span class="n">F_OK</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">errno</span> <span class="o">!=</span> <span class="n">ENOENT</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">error_print</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">"Checking plugins dir existence failed (%s)."</span><span class="p">,</span> <span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="p">));</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">sr_mkpath</span><span class="p">(</span><span class="n">plugins_dir</span><span class="p">,</span> <span class="mo">00777</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">error_print</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">"Creating plugins dir </span><span class="se">\"</span><span class="s">%s</span><span class="se">\"</span><span class="s"> failed (%s)."</span><span class="p">,</span> <span class="n">plugins_dir</span><span class="p">,</span> <span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="p">));</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">dir</span> <span class="o">=</span> <span class="n">opendir</span><span class="p">(</span><span class="n">plugins_dir</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">dir</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">error_print</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">"Opening </span><span class="se">\"</span><span class="s">%s</span><span class="se">\"</span><span class="s"> directory failed (%s)."</span><span class="p">,</span> <span class="n">plugins_dir</span><span class="p">,</span> <span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="p">));</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">while</span> <span class="p">((</span><span class="n">ent</span> <span class="o">=</span> <span class="n">readdir</span><span class="p">(</span><span class="n">dir</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">strcmp</span><span class="p">(</span><span class="n">ent</span><span class="o">-&gt;</span><span class="n">d_name</span><span class="p">,</span> <span class="s">"."</span><span class="p">)</span> <span class="o">||</span> <span class="o">!</span><span class="n">strcmp</span><span class="p">(</span><span class="n">ent</span><span class="o">-&gt;</span><span class="n">d_name</span><span class="p">,</span> <span class="s">".."</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">continue</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="cm">/* open the plugin */</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">asprintf</span><span class="p">(</span><span class="o">&amp;</span><span class="n">path</span><span class="p">,</span> <span class="s">"%s/%s"</span><span class="p">,</span> <span class="n">plugins_dir</span><span class="p">,</span> <span class="n">ent</span><span class="o">-&gt;</span><span class="n">d_name</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">error_print</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">"asprintf() failed (%s)."</span><span class="p">,</span> <span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="p">));</span>
+            <span class="n">rc</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="cm">/*RTLD_LAZY:暂缓决定，等有需要时再解出符号 
+         *以RTLD_LAZY模式打开动态库，返回一个句柄给调用进程，如果失败，则返回。
+         */</span>
+        <span class="n">handle</span> <span class="o">=</span> <span class="n">dlopen</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">RTLD_LAZY</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">handle</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">error_print</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">"Opening plugin </span><span class="se">\"</span><span class="s">%s</span><span class="se">\"</span><span class="s"> failed (%s)."</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">dlerror</span><span class="p">());</span>
+            <span class="n">free</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+            <span class="n">rc</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">free</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+
+        <span class="cm">/* allocate new plugin */</span>
+        <span class="cm">/* 分配一个新的plugin空间，并将新分配的men挂载plugins结构下*/</span>
+        <span class="n">mem</span> <span class="o">=</span> <span class="n">realloc</span><span class="p">(</span><span class="o">*</span><span class="n">plugins</span><span class="p">,</span> <span class="p">(</span><span class="o">*</span><span class="n">plugin_count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="k">sizeof</span> <span class="o">**</span><span class="n">plugins</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">mem</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">error_print</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">"realloc() failed (%s)."</span><span class="p">,</span> <span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="p">));</span>
+            <span class="n">dlclose</span><span class="p">(</span><span class="n">handle</span><span class="p">);</span>
+            <span class="n">rc</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="o">*</span><span class="n">plugins</span> <span class="o">=</span> <span class="n">mem</span><span class="p">;</span>
+
+        <span class="cm">/* find required functions */</span>
+        <span class="cm">/* plugins结构中有两个必须的回调函数，一个是init_cb,另一个是cleanup_cb
+         * 通过 void *dlsym(void *handle, const char* symbol);，
+         * handle是使用dlopen函数之后返回的句柄，
+         * symbol是要求获取的函数的名称。
+         * SRP_INIT_CB定义如下：#define SRP_INIT_CB     "sr_plugin_init_cb"
+         * SRP_CLEANUP_CB定义下：#define SRP_CLEANUP_CB  "sr_plugin_cleanup_cb"
+         * 此两个CB函数，也就是在开发插件中必须实现的两个入口函数，如果不存在，则加载失败。
+         */</span>
+        <span class="o">*</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="p">(</span><span class="o">*</span><span class="n">plugins</span><span class="p">)[</span><span class="o">*</span><span class="n">plugin_count</span><span class="p">].</span><span class="n">init_cb</span> <span class="o">=</span> <span class="n">dlsym</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">SRP_INIT_CB</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="o">*</span><span class="n">plugins</span><span class="p">)[</span><span class="o">*</span><span class="n">plugin_count</span><span class="p">].</span><span class="n">init_cb</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">error_print</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">"Failed to find function </span><span class="se">\"</span><span class="s">%s</span><span class="se">\"</span><span class="s"> in plugin </span><span class="se">\"</span><span class="s">%s</span><span class="se">\"</span><span class="s">."</span><span class="p">,</span> <span class="n">SRP_INIT_CB</span><span class="p">,</span> <span class="n">ent</span><span class="o">-&gt;</span><span class="n">d_name</span><span class="p">);</span>
+            <span class="n">dlclose</span><span class="p">(</span><span class="n">handle</span><span class="p">);</span>
+            <span class="n">rc</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="o">*</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="p">(</span><span class="o">*</span><span class="n">plugins</span><span class="p">)[</span><span class="o">*</span><span class="n">plugin_count</span><span class="p">].</span><span class="n">cleanup_cb</span> <span class="o">=</span> <span class="n">dlsym</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">SRP_CLEANUP_CB</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="o">*</span><span class="n">plugins</span><span class="p">)[</span><span class="o">*</span><span class="n">plugin_count</span><span class="p">].</span><span class="n">cleanup_cb</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">error_print</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">"Failed to find function </span><span class="se">\"</span><span class="s">%s</span><span class="se">\"</span><span class="s"> in plugin </span><span class="se">\"</span><span class="s">%s</span><span class="se">\"</span><span class="s">."</span><span class="p">,</span> <span class="n">SRP_CLEANUP_CB</span><span class="p">,</span> <span class="n">ent</span><span class="o">-&gt;</span><span class="n">d_name</span><span class="p">);</span>
+            <span class="n">dlclose</span><span class="p">(</span><span class="n">handle</span><span class="p">);</span>
+            <span class="n">rc</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="cm">/* finally store the plugin */</span>
+        <span class="cm">/*最后，本次so解析成功，保存本次so的解析结果，执行一下次目录文件的读取*/</span>
+        <span class="p">(</span><span class="o">*</span><span class="n">plugins</span><span class="p">)[</span><span class="o">*</span><span class="n">plugin_count</span><span class="p">].</span><span class="n">handle</span> <span class="o">=</span> <span class="n">handle</span><span class="p">;</span>
+        <span class="p">(</span><span class="o">*</span><span class="n">plugins</span><span class="p">)[</span><span class="o">*</span><span class="n">plugin_count</span><span class="p">].</span><span class="n">private_data</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+        <span class="o">++</span><span class="p">(</span><span class="o">*</span><span class="n">plugin_count</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">closedir</span><span class="p">(</span><span class="n">dir</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">rc</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h3 id="15-init_cb">1.5 init_cb</h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// srpd_plugin_s 结构中定义了 init 的回调函数</span>
+<span class="c1">// 如下：</span>
+<span class="k">typedef</span> <span class="nf">int</span> <span class="p">(</span><span class="o">*</span><span class="n">srp_init_cb_t</span><span class="p">)(</span><span class="n">sr_session_ctx_t</span> <span class="o">*</span><span class="n">session</span><span class="p">,</span> <span class="kt">void</span> <span class="o">**</span><span class="n">private_data</span><span class="p">);</span>
+<span class="c1">// 在 load plugin 时，</span>
+<span class="cp">#define SRP_INIT_CB     "sr_plugin_init_cb"
+</span><span class="n">init_cb</span> <span class="o">=</span> <span class="n">dlsym</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">SRP_INIT_CB</span><span class="p">);</span>
+<span class="c1">// 在 sysrepo-plugind 的 main 实现时，需要对 plugin 的初始化，实际就是需要用户对sr_plugin_init_cb() 实现，是完成该 plugin 的资源分配，用户感兴趣的事情做订阅，Ｍodule change RPC/Action, Notify, get——items 等操作，均在此处完成。有如下例子，请参考。</span>
+ 
+<span class="kt">int</span> <span class="nf">sr_plugin_init_cb</span><span class="p">(</span><span class="n">sr_session_ctx_t</span> <span class="o">*</span><span class="n">session</span><span class="p">,</span> <span class="kt">void</span> <span class="o">**</span><span class="n">private_ctx</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">rc</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">plugind_ctx</span> <span class="o">*</span><span class="n">ctx</span><span class="p">;</span>
+    <span class="n">ctx</span> <span class="o">=</span> <span class="n">calloc</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="k">sizeof</span> <span class="o">*</span><span class="n">ctx</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">ctx</span><span class="p">)</span> 
+    <span class="p">{</span>
+        <span class="n">rc</span> <span class="o">=</span> <span class="n">SR_ERR_NOMEM</span><span class="p">;</span>
+        <span class="k">goto</span> <span class="n">error</span><span class="p">;</span>
+    <span class="p">}</span>
+ 
+    <span class="cm">/*在下面初始与之有关的操作，例如，本地数据结构的初始化，sysrepo的订阅初始化*/</span>
+    <span class="p">...</span>
+  
+    <span class="n">SRP_LOG_DBGMSG</span><span class="p">(</span><span class="s">"plugin initialized successfully."</span><span class="p">);</span>
+    <span class="n">ctx</span><span class="o">-&gt;</span><span class="n">session</span> <span class="o">=</span> <span class="n">session</span><span class="p">;</span>
+    <span class="o">*</span><span class="n">private_ctx</span> <span class="o">=</span> <span class="n">ctx</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">SR_ERR_OK</span><span class="p">;</span>
+ 
+<span class="nl">error:</span>
+    <span class="n">SRP_LOG_ERR</span><span class="p">(</span><span class="s">"plugin initialization failed (%s)."</span><span class="p">,</span> <span class="n">sr_strerror</span><span class="p">(</span><span class="n">rc</span><span class="p">));</span>
+    <span class="n">sr_unsubscribe</span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">subscription</span><span class="p">);</span>
+    <span class="n">free</span><span class="p">(</span><span class="n">ctx</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">rc</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h3 id="16-cleanup_cb">1.6 cleanup_cb</h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// srpd_plugin_s 结构中定义了 cleanup 的回调函数</span>
+<span class="c1">// 如下：</span>
+<span class="k">typedef</span> <span class="nf">void</span> <span class="p">(</span><span class="o">*</span><span class="n">srp_cleanup_cb_t</span><span class="p">)(</span><span class="n">sr_session_ctx_t</span> <span class="o">*</span><span class="n">session</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">private_data</span><span class="p">);</span>
+<span class="c1">// 在 load plugin 时，</span>
+<span class="cp">#define SRP_CLEANUP_CB  "sr_plugin_cleanup_cb"
+</span><span class="n">cleanup_cb</span> <span class="o">=</span> <span class="n">dlsym</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">SRP_CLEANUP_CB</span><span class="p">);</span>
+<span class="c1">// 所以，对于用户来就，是需要对 sr_plugin_cleanup_cb() 实现，回收 plugin 在初始化时分配的资源。例如下面的 cleanup 实现，可以参考</span>
+ 
+<span class="kt">void</span> <span class="nf">sr_plugin_cleanup_cb</span><span class="p">(</span><span class="n">sr_session_ctx_t</span> <span class="o">*</span><span class="n">session</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">private_ctx</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">session</span><span class="p">;</span>
+ 
+    <span class="k">struct</span> <span class="n">plugind_ctx</span> <span class="o">*</span><span class="n">ctx</span> <span class="o">=</span> <span class="p">(</span><span class="k">struct</span> <span class="n">plugind_ctx</span> <span class="o">*</span><span class="p">)</span><span class="n">private_ctx</span><span class="p">;</span>
+    <span class="n">sr_unsubscribe</span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">subscription</span><span class="p">);</span>
+    <span class="n">free</span><span class="p">(</span><span class="n">ctx</span><span class="p">);</span>
+    
+    <span class="n">nb_terminate</span><span class="p">();</span>
+    <span class="n">yang_terminate</span><span class="p">();</span>
+    
+    <span class="n">SRP_LOG_DBGMSG</span><span class="p">(</span><span class="s">"plugin cleanup finished."</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h2 id="二sysrepo-plugin动态库示例">二、sysrepo plugin动态库示例</h2>
+<p>以下是本人大概写的一个 动态库的示例：</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;signal.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;inttypes.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">"sysrepo/values.h"</span><span class="cp">
+#include</span> <span class="cpf">"gwttacl.h"</span><span class="cp">
+#include</span> <span class="cpf">&lt;libubox/list.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;syslog.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;net/if.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;sys/ioctl.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;arpa/inet.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;pthread.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;sys/socket.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;linux/netlink.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;linux/rtnetlink.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;net/if.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;errno.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;dbus/dbus.h&gt;</span><span class="cp">
+</span>
+<span class="cp">#include</span> <span class="cpf">&lt;gio/gio.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;glib.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;glib-object.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;gio/gdbusconnection.h&gt;</span><span class="cp">
+</span>
+
+<span class="k">static</span> <span class="n">sr_subscription_ctx_t</span> <span class="o">*</span><span class="n">acl_subscrip</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+
+<span class="kt">char</span> <span class="n">g_an</span><span class="p">[</span><span class="n">MAX_STR_LEN</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+<span class="n">acl_cfg_t</span> <span class="o">*</span><span class="n">g_acl_val</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="k">struct</span> <span class="n">list_head</span> <span class="n">acl_cfg_list</span> <span class="o">=</span> <span class="n">LIST_HEAD_INIT</span><span class="p">(</span><span class="n">acl_cfg_list</span><span class="p">);</span>
+
+
+
+<span class="k">static</span> <span class="kt">void</span>
+<span class="nf">print_acl_config</span><span class="p">(</span><span class="k">struct</span> <span class="n">list_head</span> <span class="o">*</span><span class="n">list</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">acl_cfg_t</span> <span class="o">*</span><span class="n">acl</span><span class="p">;</span>
+    <span class="n">list_for_each_entry</span><span class="p">(</span><span class="n">acl</span><span class="p">,</span> <span class="n">list</span><span class="p">,</span> <span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+
+<span class="k">static</span> <span class="kt">void</span>
+<span class="nf">free_acl_cfg_list</span><span class="p">(</span><span class="k">struct</span> <span class="n">list_head</span> <span class="o">*</span><span class="n">node</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">acl_cfg_t</span> <span class="o">*</span><span class="n">p</span><span class="p">,</span> <span class="o">*</span><span class="n">tmp</span><span class="p">;</span>
+    <span class="n">list_for_each_entry_safe</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">tmp</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">list_del</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">head</span><span class="p">);</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">free</span> <span class="p">(</span><span class="n">p</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">memset</span><span class="p">(</span><span class="n">g_an</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">g_an</span><span class="p">));</span>
+<span class="p">}</span>
+
+
+
+<span class="k">static</span> <span class="kt">int</span> <span class="nf">acl_config_get</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">aclname</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">objpath</span><span class="p">)</span>
+<span class="p">{</span>
+
+
+    <span class="k">return</span> <span class="n">rc</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+
+<span class="k">static</span> <span class="kt">int</span>
+<span class="nf">sysrepo_commit_acl</span><span class="p">(</span><span class="n">sr_session_ctx_t</span> <span class="o">*</span><span class="n">sess</span><span class="p">,</span> <span class="k">struct</span> <span class="n">list_head</span> <span class="o">*</span><span class="n">list</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">char</span> <span class="n">xpath</span><span class="p">[</span><span class="n">XPATH_MAX_LEN</span><span class="p">];</span>
+    <span class="kt">char</span> <span class="n">name_xpath</span><span class="p">[</span><span class="mi">128</span><span class="p">];</span>
+    <span class="kt">int</span> <span class="n">rc</span> <span class="o">=</span> <span class="n">SR_ERR_OK</span><span class="p">;</span>
+    <span class="n">sr_val_t</span> <span class="n">val</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">};</span>
+    <span class="n">acl_cfg_t</span> <span class="o">*</span><span class="n">acl_val</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="n">dest_prefix</span><span class="p">[</span><span class="mi">32</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+    <span class="kt">int</span> <span class="n">mask_len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="n">iface</span><span class="p">[</span><span class="mi">32</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+    
+    <span class="n">rc</span> <span class="o">=</span> <span class="n">sr_delete_item</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="s">"/XXX-filter-config:filter-configs/filter-config"</span><span class="p">,</span> <span class="n">SR_EDIT_DEFAULT</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">SR_ERR_OK</span> <span class="o">!=</span> <span class="n">rc</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">WRN</span><span class="p">(</span><span class="s">"ACL: Error by sr_set_item: %s"</span><span class="p">,</span> <span class="n">sr_strerror</span><span class="p">(</span><span class="n">rc</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"func=%s end, line=%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">__FUNCTION__</span><span class="p">,</span> <span class="n">__LINE__</span><span class="p">);</span>
+    <span class="n">list_for_each_entry</span><span class="p">(</span><span class="n">acl_val</span><span class="p">,</span> <span class="n">list</span><span class="p">,</span> <span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">strlen</span><span class="p">(</span><span class="n">acl_val</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">val</span><span class="p">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">SR_LIST_T</span><span class="p">;</span>
+            <span class="n">val</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">string_val</span> <span class="o">=</span> <span class="n">acl_val</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">;</span>
+            <span class="n">sprintf</span><span class="p">(</span><span class="n">name_xpath</span><span class="p">,</span> <span class="s">"/XXX-filter-config:filter-configs/filter-config[name='%s']"</span><span class="p">,</span> <span class="n">acl_val</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+            <span class="n">rc</span> <span class="o">=</span> <span class="n">sr_set_item</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="n">xpath</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">val</span><span class="p">,</span> <span class="n">SR_EDIT_DEFAULT</span><span class="p">);</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">SR_ERR_OK</span> <span class="o">!=</span> <span class="n">rc</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">WRN</span><span class="p">(</span><span class="s">"ACL: Error by sr_set_item: %s"</span><span class="p">,</span> <span class="n">sr_strerror</span><span class="p">(</span><span class="n">rc</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">continue</span><span class="p">;</span>
+        <span class="p">}</span>
+
+
+  
+    <span class="p">}</span>
+    <span class="n">rc</span> <span class="o">=</span> <span class="n">sr_apply_changes</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">SR_ERR_OK</span> <span class="o">!=</span> <span class="n">rc</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">WRN</span><span class="p">(</span><span class="s">"ACL: Error by routing commit: %s==%d"</span><span class="p">,</span> <span class="n">sr_strerror</span><span class="p">(</span><span class="n">rc</span><span class="p">),</span> <span class="n">__LINE__</span><span class="p">);</span>
+    <span class="p">}</span>
+
+	<span class="n">DBG_LOG</span><span class="p">(</span><span class="s">"func %s end"</span><span class="p">,</span> <span class="n">__FUNCTION__</span><span class="p">);</span>
+
+    <span class="n">free_acl_cfg_list</span><span class="p">(</span><span class="n">list</span><span class="p">);</span>
+
+	
+    <span class="k">return</span> <span class="n">rc</span><span class="p">;</span>
+
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="kt">int</span> <span class="nf">sr_val_acl_set</span><span class="p">(</span><span class="k">const</span> <span class="n">sr_val_t</span> <span class="o">*</span><span class="n">value</span><span class="p">,</span> <span class="n">sr_change_oper_t</span> <span class="n">op</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">v</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="n">sr_xpath_ctx_t</span> <span class="n">xpath_ctx</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="n">an</span><span class="p">[</span><span class="n">MAX_STR_LEN</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+    <span class="kt">char</span> <span class="n">net_iface</span><span class="p">[</span><span class="n">MAX_STR_LEN</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+
+    <span class="c1">//DBG_LOG("ACL:function %s start.xpath=%s", __FUNCTION__, value-&gt;xpath);</span>
+    <span class="cm">/* route name */</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">sr_xpath_key_value</span><span class="p">(</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">xpath</span><span class="p">,</span> <span class="s">"filter-config"</span><span class="p">,</span> <span class="s">"name"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">xpath_ctx</span><span class="p">);</span>
+    <span class="n">snprintf</span><span class="p">(</span><span class="n">an</span><span class="p">,</span> <span class="n">MAX_STR_LEN</span><span class="p">,</span> <span class="s">"%s"</span><span class="p">,</span> <span class="n">v</span><span class="p">);</span>
+
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">v</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="o">&amp;&amp;</span> <span class="mi">0</span> <span class="o">!=</span> <span class="n">strcmp</span><span class="p">(</span><span class="n">an</span><span class="p">,</span> <span class="n">g_an</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">g_acl_val</span> <span class="o">=</span> <span class="n">calloc</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="o">*</span><span class="n">g_acl_val</span><span class="p">));</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">==</span> <span class="n">g_acl_val</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">ERR_SYSLOG</span><span class="p">(</span><span class="s">"ACL:calloc memory fail.func=%s,xpath=%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span>
+                <span class="n">__FUNCTION__</span><span class="p">,</span> <span class="n">value</span><span class="o">-&gt;</span><span class="n">xpath</span><span class="p">);</span>
+            <span class="k">return</span> <span class="n">SR_ERR_NOMEM</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="n">list_add</span><span class="p">(</span><span class="o">&amp;</span><span class="n">g_acl_val</span><span class="o">-&gt;</span><span class="n">head</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">acl_cfg_list</span><span class="p">);</span>
+        <span class="n">snprintf</span><span class="p">(</span><span class="n">g_acl_val</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span> <span class="n">MAX_STR_LEN</span><span class="p">,</span> <span class="s">"%s"</span><span class="p">,</span> <span class="n">an</span><span class="p">);</span>
+        <span class="n">snprintf</span><span class="p">(</span><span class="n">g_an</span><span class="p">,</span> <span class="n">MAX_STR_LEN</span><span class="p">,</span> <span class="s">"%s"</span><span class="p">,</span> <span class="n">an</span><span class="p">);</span>
+
+        <span class="n">g_acl_val</span><span class="o">-&gt;</span><span class="n">oper</span>  <span class="o">=</span> <span class="n">MOD</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">sr_xpath_recover</span><span class="p">(</span><span class="o">&amp;</span><span class="n">xpath_ctx</span><span class="p">);</span>
+
+
+    <span class="cm">/* gateway */</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">sr_xpath_node_name_eq</span><span class="p">(</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">xpath</span><span class="p">,</span> <span class="s">"name"</span><span class="p">))</span> <span class="p">{</span>
+
+        <span class="n">g_acl_val</span><span class="o">-&gt;</span><span class="n">oper</span>  <span class="o">=</span> <span class="n">op</span><span class="p">;</span>
+    <span class="p">}</span> 
+
+    <span class="cm">/*接收其他的参数*/</span>
+
+    <span class="k">return</span> <span class="n">SR_ERR_OK</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="kt">int</span> <span class="nf">sr_set_acl_change</span><span class="p">(</span><span class="n">sr_change_oper_t</span> <span class="n">op</span><span class="p">,</span> <span class="n">sr_val_t</span> <span class="o">*</span><span class="n">old_val</span><span class="p">,</span> <span class="n">sr_val_t</span> <span class="o">*</span><span class="n">new_val</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">rc</span> <span class="o">=</span> <span class="n">SR_ERR_OK</span><span class="p">;</span>
+
+    <span class="k">switch</span> <span class="p">(</span><span class="n">op</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="n">SR_OP_CREATED</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">!=</span> <span class="n">new_val</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">rc</span> <span class="o">=</span> <span class="n">sr_val_acl_set</span><span class="p">(</span><span class="n">new_val</span><span class="p">,</span> <span class="n">op</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="k">break</span><span class="p">;</span>
+
+        <span class="k">case</span> <span class="n">SR_OP_DELETED</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">!=</span> <span class="n">old_val</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">rc</span> <span class="o">=</span> <span class="n">sr_val_acl_set</span><span class="p">(</span><span class="n">old_val</span><span class="p">,</span> <span class="n">op</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="k">break</span><span class="p">;</span>
+
+        <span class="k">case</span> <span class="n">SR_OP_MODIFIED</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">!=</span> <span class="n">old_val</span> <span class="o">&amp;&amp;</span> <span class="nb">NULL</span> <span class="o">!=</span> <span class="n">new_val</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">rc</span> <span class="o">=</span> <span class="n">sr_val_acl_set</span><span class="p">(</span><span class="n">new_val</span><span class="p">,</span> <span class="n">op</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="k">break</span><span class="p">;</span>
+
+        <span class="k">case</span> <span class="n">SR_OP_MOVED</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">!=</span> <span class="n">new_val</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">DBG</span><span class="p">(</span><span class="s">"MOVED: %s after %s"</span><span class="p">,</span> <span class="n">new_val</span><span class="o">-&gt;</span><span class="n">xpath</span><span class="p">,</span> <span class="nb">NULL</span> <span class="o">!=</span> <span class="n">old_val</span> <span class="o">?</span> <span class="n">old_val</span><span class="o">-&gt;</span><span class="n">xpath</span> <span class="o">:</span> <span class="nb">NULL</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">rc</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+
+
+
+<span class="k">static</span> <span class="kt">void</span> <span class="nf">acl_del_data</span><span class="p">(</span><span class="n">acl_cfg_t</span> <span class="o">*</span><span class="n">acl_cfg</span><span class="p">)</span>
+<span class="p">{</span>
+
+    <span class="k">return</span> <span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="k">static</span> <span class="kt">void</span> <span class="nf">acl_apply</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">acl_cfg_t</span> <span class="o">*</span><span class="n">acl_cfg</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="n">print_acl_config</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acl_cfg_list</span><span class="p">);</span>
+
+    <span class="n">list_for_each_entry</span><span class="p">(</span><span class="n">acl_cfg</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">acl_cfg_list</span><span class="p">,</span> <span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">strlen</span><span class="p">(</span><span class="n">acl_cfg</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">acl_cfg</span><span class="o">-&gt;</span><span class="n">oper</span> <span class="o">==</span> <span class="n">DELETE</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="n">DBG_LOG</span><span class="p">(</span><span class="s">"ACL: delete route : %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">acl_cfg</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+                <span class="c1">//处理删除操作</span>
+                <span class="n">acl_del_data</span><span class="p">(</span><span class="n">acl_cfg</span><span class="p">);</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="c1">//处理添加、修改操作</span>
+                <span class="n">acl_set_dbus_data</span><span class="p">(</span><span class="n">acl_cfg</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">free_acl_cfg_list</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acl_cfg_list</span><span class="p">);</span>
+
+    <span class="n">DBG_LOG</span><span class="p">(</span><span class="s">"ACL:function %s end."</span><span class="p">,</span> <span class="n">__FUNCTION__</span><span class="p">);</span>
+    <span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="kt">int</span> <span class="nf">acl_to_model</span><span class="p">(</span><span class="n">sr_session_ctx_t</span> <span class="o">*</span><span class="n">sess</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">xpath</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">sr_change_iter_t</span> <span class="o">*</span><span class="n">it</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="n">sr_change_oper_t</span> <span class="n">oper</span><span class="p">;</span>
+    <span class="n">sr_val_t</span> <span class="o">*</span><span class="n">old_value</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="n">sr_val_t</span> <span class="o">*</span><span class="n">new_value</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">rc</span> <span class="o">=</span> <span class="n">SR_ERR_OK</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">SR_ERR_OK</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="n">change_path</span><span class="p">[</span><span class="n">XPATH_MAX_LEN</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,};</span>
+
+    <span class="n">snprintf</span><span class="p">(</span><span class="n">change_path</span><span class="p">,</span> <span class="n">XPATH_MAX_LEN</span><span class="p">,</span> <span class="s">"%s//."</span><span class="p">,</span> <span class="n">xpath</span><span class="p">);</span>
+    <span class="n">rc</span> <span class="o">=</span> <span class="n">sr_get_changes_iter</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="n">change_path</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">it</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">SR_ERR_OK</span> <span class="o">!=</span> <span class="n">rc</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">ERR</span><span class="p">(</span><span class="s">"ACL: get changes iter fail, line=%d, xpath=%s, rc=%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span>
+            <span class="n">__LINE__</span><span class="p">,</span> <span class="n">xpath</span><span class="p">,</span> <span class="n">sr_strerror</span><span class="p">(</span><span class="n">rc</span><span class="p">));</span>
+        <span class="n">sr_free_change_iter</span><span class="p">(</span><span class="n">it</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">rc</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="n">SR_ERR_OK</span> <span class="o">==</span> <span class="p">(</span><span class="n">ret</span> <span class="o">=</span> <span class="n">sr_get_change_next</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="n">it</span><span class="p">,</span>
+                    <span class="o">&amp;</span><span class="n">oper</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">old_value</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">new_value</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="n">rc</span> <span class="o">=</span> <span class="n">sr_set_acl_change</span><span class="p">(</span><span class="n">oper</span><span class="p">,</span> <span class="n">old_value</span><span class="p">,</span> <span class="n">new_value</span><span class="p">);</span>
+        <span class="n">sr_free_val</span><span class="p">(</span><span class="n">old_value</span><span class="p">);</span>
+        <span class="n">sr_free_val</span><span class="p">(</span><span class="n">new_value</span><span class="p">);</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">SR_ERR_OK</span> <span class="o">!=</span> <span class="n">rc</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">sr_free_change_iter</span><span class="p">(</span><span class="n">it</span><span class="p">);</span>
+            <span class="n">memset</span><span class="p">(</span><span class="n">g_an</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MAX_STR_LEN</span><span class="p">);</span>
+            <span class="n">free_acl_cfg_list</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acl_cfg_list</span><span class="p">);</span>
+            <span class="k">return</span> <span class="n">rc</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">memset</span><span class="p">(</span><span class="n">g_an</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MAX_STR_LEN</span><span class="p">);</span>
+    <span class="n">sr_free_change_iter</span><span class="p">(</span><span class="n">it</span><span class="p">);</span>
+    <span class="n">DBG_LOG</span><span class="p">(</span><span class="s">"ACL : get all changes successfully, xpath=%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">xpath</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">SR_ERR_OK</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="kt">int</span> <span class="nf">acl_change_cb</span><span class="p">(</span><span class="n">sr_session_ctx_t</span> <span class="o">*</span><span class="n">session</span><span class="p">,</span>
+    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">module_name</span><span class="p">,</span>
+    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">xpath</span><span class="p">,</span>
+    <span class="n">sr_event_t</span> <span class="n">event</span><span class="p">,</span>
+    <span class="kt">uint32_t</span> <span class="n">request_id</span><span class="p">,</span>
+    <span class="kt">void</span> <span class="o">*</span><span class="n">private_ctx</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">SR_EV_CHANGE</span> <span class="o">==</span> <span class="n">event</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">acl_to_model</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">xpath</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">SR_EV_DONE</span> <span class="o">==</span> <span class="n">event</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">acl_apply</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">SR_ERR_OK</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="k">static</span> <span class="kt">int</span> <span class="nf">acl_db_init</span><span class="p">(</span><span class="n">sr_session_ctx_t</span> <span class="o">*</span><span class="n">session</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">rc</span> <span class="o">=</span> <span class="n">SR_ERR_OK</span><span class="p">;</span>
+    <span class="c1">//get 所有的配置</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">SR_ERR_OK</span> <span class="o">!=</span> <span class="p">(</span><span class="n">rc</span> <span class="o">=</span> <span class="n">acl_config_get</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">rc</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">//print_acl_config(&amp;acl_cfg_list);</span>
+    <span class="c1">//同步到running库</span>
+    <span class="k">return</span> <span class="n">sysrepo_commit_acl</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">acl_cfg_list</span><span class="p">);</span>
+<span class="p">}</span>
+
+
+
+<span class="kt">int</span> <span class="nf">sr_plugin_init_cb</span><span class="p">(</span><span class="n">sr_session_ctx_t</span> <span class="o">*</span><span class="n">session</span><span class="p">,</span> <span class="kt">void</span> <span class="o">**</span><span class="n">private_ctx</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">char</span> <span class="n">xpath</span><span class="p">[</span><span class="n">XPATH_MAX_LEN</span><span class="p">];</span>
+    <span class="n">sr_val_t</span> <span class="n">val</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="p">};</span>
+    <span class="kt">int</span> <span class="n">rc</span> <span class="o">=</span> <span class="n">SR_ERR_OK</span><span class="p">;</span>
+
+    <span class="cm">/*get 所有的相关配置，同步到 running库中*/</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">SR_ERR_OK</span> <span class="o">!=</span> <span class="p">(</span><span class="n">rc</span> <span class="o">=</span> <span class="n">acl_db_init</span><span class="p">(</span><span class="n">session</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">rc</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">rc</span> <span class="o">=</span> <span class="n">sr_module_change_subscribe</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="s">"XXX-filter-config"</span><span class="p">,</span>
+            <span class="s">"/XXX-filter-config:filter-configs/filter-config"</span><span class="p">,</span>
+            <span class="n">acl_change_cb</span><span class="p">,</span> <span class="o">*</span><span class="n">private_ctx</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SR_SUBSCR_DEFAULT</span><span class="p">,</span>
+            <span class="o">&amp;</span><span class="n">acl_subscrip</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">SR_ERR_OK</span> <span class="o">!=</span> <span class="n">rc</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">ERR_MSG</span><span class="p">(</span><span class="s">"ACL: gwtt-filter-config subscribe fail</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+        <span class="k">goto</span> <span class="n">error</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">SR_ERR_OK</span><span class="p">;</span>
+
+<span class="nl">error:</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">acl_subscrip</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">sr_unsubscribe</span><span class="p">(</span><span class="n">acl_subscrip</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">rc</span><span class="p">;</span>
+
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">sr_plugin_cleanup_cb</span><span class="p">(</span><span class="n">sr_session_ctx_t</span> <span class="o">*</span><span class="n">session</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">private_ctx</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">acl_subscrip</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">sr_unsubscribe</span><span class="p">(</span><span class="n">acl_subscrip</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">SRP_LOG_DBGMSG</span><span class="p">(</span><span class="s">"Plugin gwtt_route cleaned-up end successfully"</span><span class="p">);</span>
+    <span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+
+</code></pre></div></div>
+
+</article>
+
+
+
+
+
+<section class="rss">
+  <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+</section>
+
+<section class="share">
+  <span>Share: </span>
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+      <a href="//www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2F0.0.0.0%3A5555%2Fopenwrt%2F2020%2F09%2F27%2Fsysrepo-src.html"
+        onclick="window.open(this.href, 'linkedin-share', 'width=550,height=255');return false;">
+        <i class="fa fa-linkedin-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      <a href="//plus.google.com/share?title=sysrepo%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90&url=http%3A%2F%2F0.0.0.0%3A5555%2Fopenwrt%2F2020%2F09%2F27%2Fsysrepo-src.html"
+        onclick="window.open(this.href, 'google-plus-share', 'width=550,height=255');return false;">
+        <i class="fa fa-google-plus-square fa-lg"></i>
+      </a>
+    
+    
+    
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+</section>
+
+
+
+
+</div>
+</div>
+
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h3 class="footer-heading">Dandan's blog</h3>
+
+    <div class="site-navigation">
+
+      <p><strong>Site Map</strong></p>
+      <ul class="pages">
+				
+	
+	<li class="nav-link"><a href="/about/">About</a>
+	
+
+	
+
+	
+
+	
+	<li class="nav-link"><a href="/posts/">Posts</a>
+	
+
+	
+	<li class="nav-link"><a href="/typography/">Typography</a>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+      </ul>
+    </div>
+
+    <div class="site-contact">
+
+      <p><strong>Contact</strong></p>
+      <ul class="social-media-list">
+        <li>
+          <a href="mailto:lyldylidanyang@163.com">
+            <i class="fa fa-envelope-o"></i>
+            <span class="username">lyldylidanyang@163.com</span>
+          </a>
+        </li>
+
+        
+          
+          <li>
+            <a href="https://blog.csdn.net/weixin_41855428?spm=1011.2415.3001.5343" title="Follow me on Twitter">
+              <i class="fa fa-twitter"></i>
+              <span class="username">TheBenCentra</span>
+            </a>
+          </li>
+          
+        
+          
+          <li>
+            <a href="https://github.com/LoveCPro" title="Fork me on GitHub">
+              <i class="fa fa-github"></i>
+              <span class="username">Dandan</span>
+            </a>
+          </li>
+          
+        
+          
+          <li>
+            <a href="https://www.linkedin.com/pub/ben-centra/47/769/60a" title="Connect with me on LinkedIn">
+              <i class="fa fa-linkedin"></i>
+              <span class="username">Ben Centra</span>
+            </a>
+          </li>
+          
+        
+          
+        
+          
+        
+
+      </ul>
+    </div>
+
+    <div class="site-signature">
+      <p class="rss-subscribe text"><strong>Subscribe <a href="/feed.xml">via RSS</a></strong></p>
+      <p class="text">踏在代码的征程，与 Bug 共舞.
+</p>
+    </div>
+
+  </div>
+
+</footer>
+
+<!-- Scripts -->
+<script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.1/js/lightbox.min.js"></script>
+<script src="//unpkg.com/popper.js@1"></script>
+<script src="//unpkg.com/tippy.js@5"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  // Default syntax highlighting
+  hljs.initHighlightingOnLoad();
+
+  // Header
+  var menuToggle = $('#js-mobile-menu').unbind();
+  $('#js-navigation-menu').removeClass("show");
+  menuToggle.on('click', function(e) {
+    e.preventDefault();
+    $('#js-navigation-menu').slideToggle(function(){
+      if($('#js-navigation-menu').is(':hidden')) {
+        $('#js-navigation-menu').removeAttr('style');
+      }
+    });
+  });
+
+	// Enable tooltips via Tippy.js
+	if (Array.isArray(window.tooltips)) {
+		window.tooltips.forEach(function(tooltip) {
+			var selector = tooltip[0];
+			var config = tooltip[1];
+			tippy(selector, config);
+		})
+	}
+});
+
+</script>
+
+
+
+
+
+
+  </body>
+
+</html>
